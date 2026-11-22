@@ -17,8 +17,9 @@ IMPORTANT: DATABASE STEP BEFORE DEPLOY
 2. Create a NEW query.
 3. Copy the COMPLETE contents of supabase-integration-migration.sql from this ZIP.
 4. Run it once. It is designed to be safe to run again.
-5. Confirm the query reports Success.
-6. Confirm Authentication > Users contains your admin account and public.dm_admins contains that same user's UUID.
+5. Confirm the query reports Success. The migration also fixes the admin-membership read policy required by the login page.
+6. In Supabase SQL Editor, run the complete contents of register-admin.sql to register the supplied Auth user UUID as an administrator. This script checks that the UUID exists before inserting it.
+7. Confirm Authentication > Users contains the intended account and public.dm_admins contains that same user's UUID.
 7. In Authentication URL Configuration, set Site URL to your live GitHub Pages URL and add it to Redirect URLs.
 8. Disable public sign-ups if you do not want visitors creating accounts.
 
@@ -57,3 +58,12 @@ F. Check Supabase Table Editor and browser console for errors.
 G. Delete test entries after successful verification.
 
 If a step fails, keep the previous GitHub deployment available for rollback and share the exact error message (never share passwords or secret keys).
+
+
+ADMIN LOGIN FIX (IMPORTANT)
+1. Upload all files from this ZIP to the root of your GitHub Pages repository, replacing the old files.
+2. In Supabase Dashboard > SQL Editor, open and run admin-login-fix.sql once.
+3. Confirm that UID c74103c7-ceda-4f11-af99-151ebff5a758 belongs to the exact email account you enter on the Admin Login page. If the email shown in Authentication > Users has a different UID, replace target_user in the SQL file with that exact UID before running it.
+4. Open the website in a private/incognito tab or clear the site's cached files, then try Admin Login again.
+
+The browser-side admin check now uses the dm_is_admin() RPC instead of selecting dm_admins directly. Never share your password or Supabase service_role key.

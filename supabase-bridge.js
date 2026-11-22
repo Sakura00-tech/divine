@@ -36,8 +36,14 @@
   async function currentAdmin() {
     const { data: { user } = {}, error } = await client.auth.getUser();
     if (error || !user) return false;
-    const { data, error: adminError } = await client.from('dm_admins').select('user_id').eq('user_id', user.id).maybeSingle();
-    return !adminError && !!data;
+    // Ask the SECURITY DEFINER function to check the current user's UID.
+    // A direct SELECT from dm_admins can be blocked by that table's RLS policy.
+    const { data, error: adminError } = await client.rpc('dm_is_admin');
+    if (adminError) {
+      console.error('[Divine Mercy] Admin verification RPC failed:', adminError.message || adminError);
+      return false;
+    }
+    return data === true;
   }
   window.dmIsAdmin = currentAdmin;
 
@@ -196,10 +202,18 @@
   window.dmLogin = async function (email, password) {
     const { data, error } = await client.auth.signInWithPassword({ email, password });
     if (error) return { ok: false, message: error.message };
-    const { data: admin, error: adminError } = await client.from('dm_admins').select('user_id').eq('user_id', data.user.id).maybeSingle();
-    if (adminError || !admin) {
+    // Verify the authenticated user's UID using the SECURITY DEFINER RPC.
+    // This avoids a false negative when dm_admins RLS prevents a direct table read.
+    const { data: isAdmin, error: adminError } = await client.rpc('dm_is_admin');
+    if (adminError || isAdmin !== true) {
+      console.error('[Divine Mercy] Admin check failed:', adminError?.message || 'dm_is_admin returned false', 'Authenticated UID:', data.user?.id);
       await client.auth.signOut();
-      return { ok: false, message: 'This account is not registered as a parish administrator.' };
+      return {
+        ok: false,
+        message: adminError
+          ? 'Administrator verification is unavailable. Please run the admin-login-fix.sql file in Supabase SQL Editor, then try again.'
+          : 'This login is valid, but this exact account is not registered as a parish administrator. Please confirm its User ID in Supabase Authentication > Users.'
+      };
     }
     sessionStorage.setItem('dm_admin_logged_in', 'true');
     sessionStorage.setItem('dm_admin_role', 'admin');

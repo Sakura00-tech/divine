@@ -1,3 +1,14 @@
+
+-- Allow each signed-in user to verify their own administrator membership.
+-- The existing admin policy still controls access to the rest of the roster.
+alter table public.dm_admins enable row level security;
+drop policy if exists "Users can verify own admin membership" on public.dm_admins;
+create policy "Users can verify own admin membership"
+  on public.dm_admins
+  for select
+  to authenticated
+  using (user_id = auth.uid() or public.dm_is_admin());
+
 -- Divine Mercy: required integration migration. Run once in Supabase SQL Editor.
 -- Safe to re-run. Uses existing public.dm_is_admin() helper.
 
