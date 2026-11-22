@@ -59,11 +59,10 @@ G. Delete test entries after successful verification.
 
 If a step fails, keep the previous GitHub deployment available for rollback and share the exact error message (never share passwords or secret keys).
 
-
-ADMIN LOGIN FIX (IMPORTANT)
-1. Upload all files from this ZIP to the root of your GitHub Pages repository, replacing the old files.
-2. In Supabase Dashboard > SQL Editor, open and run admin-login-fix.sql once.
-3. Confirm that UID c74103c7-ceda-4f11-af99-151ebff5a758 belongs to the exact email account you enter on the Admin Login page. If the email shown in Authentication > Users has a different UID, replace target_user in the SQL file with that exact UID before running it.
-4. Open the website in a private/incognito tab or clear the site's cached files, then try Admin Login again.
-
-The browser-side admin check now uses the dm_is_admin() RPC instead of selecting dm_admins directly. Never share your password or Supabase service_role key.
+ADMIN LOGIN REPAIR (IMPORTANT)
+1. Open Supabase Dashboard > SQL Editor.
+2. Open admin-login-fix.sql from this ZIP, copy the entire file, and Run it once.
+3. The final SELECT should show reynald17esquerra29@gmail.com and its user UUID.
+4. Upload/replace all website files from this ZIP in the GitHub repository root.
+5. Open the website in Chrome and refresh the admin login page.
+The website bridge now verifies admin membership using dm_is_admin() RPC instead of a direct dm_admins table SELECT.

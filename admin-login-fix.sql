@@ -1,7 +1,29 @@
--- Divine Mercy: repair admin verification and register the supplied admin UID.
--- Run once in Supabase Dashboard > SQL Editor.
--- This function checks auth.uid() without requiring the browser to SELECT dm_admins.
+-- Divine Mercy: repair admin registration and verification for the exact login email.
+-- Run this ONCE in Supabase Dashboard > SQL Editor.
+-- This registers reynald17esquerra29@gmail.com using the real Auth UUID.
 
+do $$
+declare
+  target_user uuid;
+begin
+  select id into target_user
+  from auth.users
+  where lower(email) = lower('reynald17esquerra29@gmail.com')
+  order by created_at desc
+  limit 1;
+
+  if target_user is null then
+    raise exception 'The Supabase Auth account reynald17esquerra29@gmail.com was not found. Confirm the email under Authentication > Users.';
+  end if;
+
+  insert into public.dm_admins (user_id)
+  values (target_user)
+  on conflict (user_id) do nothing;
+end
+$$;
+
+-- Secure admin check. SECURITY DEFINER allows the function to check the roster
+-- without relying on the caller's direct SELECT permission on dm_admins.
 create or replace function public.dm_is_admin()
 returns boolean
 language sql
@@ -17,20 +39,10 @@ as $$
 $$;
 
 revoke all on function public.dm_is_admin() from public;
-grant execute on function public.dm_is_admin() to anon, authenticated;
+grant execute on function public.dm_is_admin() to authenticated;
 
--- Register the UUID supplied for the newly created admin account.
--- IMPORTANT: this must be the exact UID shown for the email used on the login page.
-do $$
-declare
-  target_user uuid := 'c74103c7-ceda-4f11-af99-151ebff5a758';
-begin
-  if not exists (select 1 from auth.users where id = target_user) then
-    raise exception 'The supplied admin UID was not found in auth.users. Verify the UID in Authentication > Users.';
-  end if;
-
-  insert into public.dm_admins (user_id)
-  values (target_user)
-  on conflict (user_id) do nothing;
-end
-$$;
+-- Confirm registration (returns the email and UUID of the registered admin).
+select u.email, a.user_id
+from public.dm_admins a
+join auth.users u on u.id = a.user_id
+where lower(u.email) = lower('reynald17esquerra29@gmail.com');
