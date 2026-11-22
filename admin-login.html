@@ -1,0 +1,4813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | Divine Mercy</title>
+<style>
+/* =====================================================
+   DIVINE MERCY ADMIN PANEL
+===================================================== */
+
+:root {
+    --navy: #b91c1c;
+    --navy-dark: #7f1d1d;
+    --gold: #b91c1c;
+    --gold-light: #fecaca;
+
+    --white: #ffffff;
+    --background: #f4f6fa;
+    --card: #ffffff;
+
+    --text: #1f2937;
+    --muted: #6b7280;
+
+    --border: #e5e7eb;
+
+    --success: #15803d;
+    --success-bg: #dcfce7;
+
+    --warning: #b45309;
+    --warning-bg: #fef3c7;
+
+    --danger: #b91c1c;
+    --danger-bg: #fee2e2;
+
+    --info: #1d4ed8;
+    --info-bg: #dbeafe;
+
+    --shadow:
+        0 8px 25px rgba(15, 35, 63, 0.08);
+
+    --radius: 14px;
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   LOGIN PAGE
+===================================================== */
+
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(8, 24, 44, 0.98),
+            rgba(16, 35, 63, 0.95)
+        );
+
+    padding: 20px;
+}
+
+
+.login-container {
+    width: 100%;
+    max-width: 430px;
+}
+
+
+.login-card {
+    background: var(--white);
+
+    border-radius: 24px;
+
+    padding: 42px 36px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.28);
+
+    text-align: center;
+}
+
+
+.login-logo {
+    width: 76px;
+    height: 76px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(navy);
+    color: var(gold);
+
+    font-size: 34px;
+
+    border: 4px solid var(--gold-light);
+}
+
+
+.login-card h1 {
+    margin: 0;
+
+    color: var(--navy);
+
+    font-size: 28px;
+}
+
+
+.login-subtitle {
+    margin:
+        10px
+        0
+        28px;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+
+.input-group {
+    text-align: left;
+
+    margin-bottom: 18px;
+}
+
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--navy);
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.input-group input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+
+.input-group input:focus {
+    border-color: var(--gold);
+
+    box-shadow:
+        0 0 0 3px rgba(201, 162, 39, 0.12);
+}
+
+
+.password-wrapper {
+    position: relative;
+}
+
+
+.password-wrapper input {
+    padding-right: 70px;
+}
+
+
+.password-toggle {
+    position: absolute;
+
+    right: 8px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    border: 0;
+    background: transparent;
+
+    color: var(--navy);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.login-button {
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: var(--navy);
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    transition: 0.2s;
+}
+
+
+.login-button:hover {
+    background: var(--navy-dark);
+
+    transform: translateY(-1px);
+}
+
+
+.login-error {
+    display: none;
+
+    margin-bottom: 18px;
+
+    padding: 11px;
+
+    border-radius: 9px;
+
+    background: var(--danger-bg);
+    color: var(--danger);
+
+    font-size: 13px;
+}
+
+
+.back-home {
+    display: inline-block;
+
+    margin-top: 22px;
+
+    color: var(--navy);
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   ADMIN LAYOUT
+===================================================== */
+
+.admin-layout {
+    min-height: 100vh;
+
+    display: flex;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    position: fixed;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 260px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--navy);
+
+    color: white;
+
+    z-index: 1000;
+}
+
+
+.sidebar-brand {
+    min-height: 90px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 18px 20px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,0.08);
+}
+
+
+.sidebar-logo {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: white;
+
+    color: var(--gold);
+
+    font-size: 23px;
+}
+
+
+.brand-title {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+
+.brand-subtitle {
+    margin-top: 3px;
+
+    color: rgba(255,255,255,0.65);
+
+    font-size: 11px;
+}
+
+
+.sidebar-menu {
+    padding: 18px 12px;
+}
+
+
+.menu-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 5px;
+
+    padding: 12px 14px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: rgba(255,255,255,0.72);
+
+    text-align: left;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+
+.menu-item span {
+    width: 23px;
+
+    text-align: center;
+
+    font-size: 17px;
+}
+
+
+.menu-item:hover {
+    background:
+        rgba(255,255,255,0.08);
+
+    color: white;
+}
+
+
+.menu-item.active {
+    background: var(--gold);
+
+    color: var(--navy);
+
+    font-weight: 800;
+}
+
+
+.sidebar-bottom {
+    margin-top: auto;
+
+    padding: 15px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.08);
+}
+
+
+.sidebar-home,
+.logout-button {
+    width: 100%;
+
+    display: block;
+
+    padding: 11px;
+
+    margin-bottom: 8px;
+
+    border-radius: 9px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.sidebar-home {
+    color: white;
+
+    background:
+        rgba(255,255,255,0.08);
+}
+
+
+.logout-button {
+    border: 1px solid
+        rgba(255,255,255,0.15);
+
+    background: transparent;
+
+    color: #ffdddd;
+}
+
+
+.logout-button:hover {
+    background: var(--danger);
+    color: white;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.admin-main {
+    width: calc(100% - 260px);
+
+    margin-left: 260px;
+
+    min-height: 100vh;
+
+    padding-bottom: 50px;
+}
+
+
+.admin-header {
+    min-height: 90px;
+
+    padding: 18px 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: white;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 500;
+}
+
+
+.admin-header h1 {
+    margin: 0;
+
+    color: var(--navy);
+
+    font-size: 25px;
+}
+
+
+.admin-header p {
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.admin-profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.admin-avatar {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--navy);
+    color: var(--gold);
+
+    font-weight: 800;
+}
+
+
+.admin-profile strong,
+.admin-profile small {
+    display: block;
+}
+
+
+.admin-profile strong {
+    font-size: 13px;
+
+    color: var(--navy);
+}
+
+
+.admin-profile small {
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+.mobile-menu {
+    display: none;
+
+    border: 0;
+
+    background: transparent;
+
+    font-size: 22px;
+}
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.admin-section {
+    display: none;
+
+    padding: 30px 32px;
+}
+
+
+.admin-section.active {
+    display: block;
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+.welcome-card {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 30px;
+
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--navy),
+            #1c3c68
+        );
+
+    color: white;
+
+    box-shadow: var(--shadow);
+}
+
+
+.welcome-label {
+    color: var(--gold-light);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+}
+
+
+.welcome-card h2 {
+    margin: 8px 0;
+
+    font-size: 27px;
+}
+
+
+.welcome-card p {
+    max-width: 650px;
+
+    margin: 0;
+
+    color: rgba(255,255,255,0.75);
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+
+.welcome-icon {
+    width: 90px;
+    height: 90px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.1);
+
+    border:
+        2px solid
+        rgba(255,255,255,0.25);
+
+    color: var(--gold-light);
+
+    font-size: 42px;
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-top: 22px;
+}
+
+
+.stat-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    background: white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f1f5f9;
+
+    font-size: 23px;
+}
+
+
+.stat-card span,
+.stat-card strong {
+    display: block;
+}
+
+
+.stat-card span {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+.stat-card strong {
+    margin-top: 5px;
+
+    color: var(--navy);
+
+    font-size: 25px;
+}
+
+
+/* =====================================================
+   SECTION TITLES
+===================================================== */
+
+.section-title-row {
+    margin-top: 32px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.section-title-row h2,
+.content-header h2 {
+    margin: 0;
+
+    color: var(--navy);
+
+    font-size: 20px;
+}
+
+
+.section-title-row p,
+.content-header p {
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.primary-button,
+.secondary-button,
+.danger-button {
+    border-radius: 9px;
+
+    padding: 10px 15px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    transition: 0.2s;
+}
+
+
+.primary-button {
+    border: none;
+
+    background: var(--navy);
+    color: white;
+}
+
+
+.primary-button:hover {
+    background: var(--navy-dark);
+}
+
+
+.secondary-button {
+    border:
+        1px solid
+        var(--border);
+
+    background: white;
+
+    color: var(--navy);
+}
+
+
+.secondary-button:hover {
+    border-color: var(--gold);
+}
+
+
+.danger-button {
+    border: none;
+
+    background: var(--danger-bg);
+
+    color: var(--danger);
+}
+
+
+.danger-button:hover {
+    background: var(--danger);
+
+    color: white;
+}
+
+
+/* =====================================================
+   BOOKING OVERVIEW
+===================================================== */
+
+.booking-overview {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-top: 15px;
+}
+
+
+.overview-card {
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    text-align: center;
+}
+
+
+.overview-card span,
+.overview-card strong {
+    display: block;
+}
+
+
+.overview-card span {
+    font-size: 12px;
+
+    color: var(--muted);
+}
+
+
+.overview-card strong {
+    margin-top: 5px;
+
+    font-size: 26px;
+}
+
+
+.overview-card.pending strong {
+    color: var(--warning);
+}
+
+
+.overview-card.confirmed strong {
+    color: var(--info);
+}
+
+
+.overview-card.completed strong {
+    color: var(--success);
+}
+
+
+.overview-card.cancelled strong {
+    color: var(--danger);
+}
+
+
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+.quick-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-top: 15px;
+}
+
+
+.quick-card {
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    background: white;
+
+    text-align: left;
+
+    box-shadow: var(--shadow);
+
+    transition: 0.2s;
+}
+
+
+.quick-card:hover {
+    transform: translateY(-3px);
+
+    border-color: var(--gold);
+}
+
+
+.quick-card span,
+.quick-card strong,
+.quick-card small {
+    display: block;
+}
+
+
+.quick-card span {
+    margin-bottom: 10px;
+
+    font-size: 25px;
+}
+
+
+.quick-card strong {
+    color: var(--navy);
+
+    font-size: 14px;
+}
+
+
+.quick-card small {
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    line-height: 1.5;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   CONTENT HEADER
+===================================================== */
+
+.content-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   LIST
+===================================================== */
+
+.admin-list {
+    display: grid;
+
+    gap: 14px;
+}
+
+
+.admin-record {
+    background: white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+}
+
+
+.record-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    align-items: flex-start;
+}
+
+
+.record-title {
+    margin: 0;
+
+    color: var(--navy);
+
+    font-size: 17px;
+}
+
+
+.record-content {
+    margin: 10px 0 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+.record-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 13px;
+}
+
+
+.meta {
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: #f1f5f9;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+.record-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 15px;
+
+    padding-top: 14px;
+
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+/* =====================================================
+   BADGES
+===================================================== */
+
+.badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    text-transform: capitalize;
+}
+
+
+.badge-pending {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+
+.badge-confirmed {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+
+.badge-completed {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+
+.badge-cancelled {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+
+.badge-published {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+
+.badge-scheduled {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+
+.badge-draft {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+
+.badge-urgent {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+
+.badge-high {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+
+.badge-normal {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+
+.badge-low {
+    background: #f1f5f9;
+    color: var(--muted);
+}
+
+
+/* =====================================================
+   BOOKING FILTER
+===================================================== */
+
+.booking-filter {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+
+    padding: 5px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    width: fit-content;
+}
+
+
+.booking-filter-button {
+    border: none;
+
+    padding: 8px 13px;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.booking-filter-button.active {
+    background: var(--navy);
+
+    color: white;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+    padding: 60px 20px;
+
+    border:
+        1px dashed
+        #cbd5e1;
+
+    border-radius: var(--radius);
+
+    background: white;
+
+    text-align: center;
+}
+
+
+.empty-state-icon {
+    font-size: 35px;
+
+    margin-bottom: 10px;
+}
+
+
+.empty-state h3 {
+    margin: 0;
+
+    color: var(--navy);
+}
+
+
+.empty-state p {
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal-container {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.55);
+
+    z-index: 3000;
+}
+
+
+.modal-container.open {
+    display: flex;
+}
+
+
+.admin-modal {
+    width: 100%;
+    max-width: 600px;
+
+    max-height: 90vh;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    background: white;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.3);
+}
+
+
+.modal-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+
+.modal-header h2 {
+    margin: 0;
+
+    color: var(--navy);
+
+    font-size: 19px;
+}
+
+
+.modal-header p {
+    margin: 4px 0 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+.modal-close {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    color: var(--muted);
+
+    font-size: 15px;
+}
+
+
+.modal-content {
+    overflow-y: auto;
+
+    padding: 22px;
+}
+
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--navy);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+
+.form-control {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+
+.form-control:focus {
+    border-color: var(--gold);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(201,162,39,0.1);
+}
+
+
+textarea.form-control {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+
+.modal-footer {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    padding: 16px 20px;
+
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.admin-toast {
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    max-width: 350px;
+
+    padding: 13px 17px;
+
+    border-radius: 9px;
+
+    background: var(--navy);
+
+    color: white;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,0.2);
+
+    font-size: 13px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transform:
+        translateY(15px);
+
+    transition: 0.25s;
+
+    z-index: 5000;
+}
+
+
+.admin-toast.show {
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .stats-grid,
+    .booking-overview {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .quick-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        transform:
+            translateX(-100%);
+
+        transition: 0.25s;
+    }
+
+
+    .sidebar.open {
+        transform:
+            translateX(0);
+    }
+
+
+    .admin-main {
+        width: 100%;
+
+        margin-left: 0;
+    }
+
+
+        .mobile-menu {
+        display: block;
+    }
+
+
+    .admin-header {
+        gap: 12px;
+
+        padding:
+            15px 18px;
+    }
+
+
+    .admin-header h1 {
+        font-size: 20px;
+    }
+
+
+    .admin-profile {
+        display: none;
+    }
+
+
+    .admin-section {
+        padding:
+            22px 18px;
+    }
+
+
+    .welcome-card {
+        padding: 22px;
+    }
+
+
+    .welcome-icon {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .login-card {
+        padding: 32px 22px;
+    }
+
+
+    .stats-grid,
+    .booking-overview,
+    .quick-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .content-header,
+    .section-title-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+
+    .record-top {
+        flex-direction: column;
+    }
+
+
+    .record-actions {
+        justify-content: stretch;
+    }
+
+
+    .record-actions button {
+        flex: 1;
+    }
+
+}
+
+
+
+/* RED INTERACTION + DARK RED FOOTER */
+:root{--click-red:#b91c1c;--click-red-dark:#7f1d1d;--footer-red:#641010;}
+button:active,a:active,.tab-btn:active,.btn:active,.password-toggle:active,#hamburger:active{color:var(--click-red) !important;}
+.tab-btn.active,.tab-btn:hover{background:var(--click-red) !important;border-color:var(--click-red) !important;color:#fff !important;}
+.btn-primary:active,.login-button:active{background:var(--click-red-dark) !important;}
+footer{background:var(--footer-red) !important;color:#fff;}
+</style>
+
+<style>
+/* FINAL RED THEME OVERRIDES */
+:root{
+  --root-red:#b91c1c;
+  --root-red-dark:#7f1d1d;
+  --root-red-light:#fecaca;
+}
+/* Buttons */
+button, .btn, .btn-primary, .submit-booking-btn, .hero-cta, .login-button{
+  background:var(--root-red) !important;
+  border-color:var(--root-red) !important;
+  color:#fff !important;
+}
+button:hover, .btn:hover, .btn-primary:hover, .submit-booking-btn:hover, .hero-cta:hover, .login-button:hover{
+  background:var(--root-red-dark) !important;
+  border-color:var(--root-red-dark) !important;
+}
+button:active, .btn:active, .btn-primary:active, .submit-booking-btn:active, .hero-cta:active, .login-button:active{
+  background:#641010 !important;
+}
+/* Boxes / cards / form fields */
+.card, .booking-type-card, .modal, .login-card, .form-group input, .form-group textarea, .form-group select, .search-input, .input-group input, .tab-btn{
+  border-color:var(--root-red) !important;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus, .search-input:focus, .input-group input:focus{
+  border-color:var(--root-red) !important;
+  box-shadow:0 0 0 3px rgba(185,28,28,.14) !important;
+}
+.tab-btn.active, .tab-btn:hover{
+  background:var(--root-red) !important;
+  border-color:var(--root-red) !important;
+  color:#fff !important;
+}
+footer{background:#641010 !important;color:#fff !important;}
+</style>
+<!-- FINAL RED THEME OVERRIDES -->
+
+
+<style>
+.forgot-password-link{display:block;margin-top:14px;text-align:center;color:var(--root-red,#b91c1c);text-decoration:none;font-weight:600;font-size:14px;}
+.forgot-password-link:hover{text-decoration:underline;}
+</style>
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="login-logo">
+                ✝
+            </div>
+
+            <h1>Admin Login</h1>
+
+            <p class="login-subtitle">
+                The National Shrine and Parish<br>
+                The Divine Mercy
+            </p>
+
+            <div id="login-error" class="login-error"></div>
+            
+            <form id="admin-login-form">
+
+                <div class="input-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter admin username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+                <div class="input-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter admin password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="toggle-password"
+                            class="password-toggle"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Login as Admin
+                </button>
+
+            </form>
+
+            <a href="index.html" class="back-home">
+                ← Back to Home
+            </a>
+            <a href="forgot-password.html" class="forgot-password-link">Forgot Password?</a>
+
+        </div>
+
+    </div>
+
+<script>
+
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const STORAGE_KEY = "dm_church_data";
+
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "admin123";
+
+const VIEWER_USERNAME = "viewer";
+const VIEWER_PASSWORD = "viewer123";
+
+const LOGIN_KEY = "dm_admin_logged_in";
+const ROLE_KEY = "dm_admin_role";
+
+
+/* =====================================================
+   DEFAULT DATA STRUCTURE
+===================================================== */
+
+const emptyState = {
+    announcements: [],
+    schedule: [],
+    posts: [],
+    bookings: []
+};
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+function isAdminLoggedIn() {
+
+    return sessionStorage.getItem(LOGIN_KEY) === "true";
+
+}
+
+
+function adminLogin(username, password) {
+
+    if (
+        username === ADMIN_USERNAME &&
+        password === ADMIN_PASSWORD
+    ) {
+
+        sessionStorage.setItem(
+            LOGIN_KEY,
+            "true"
+        );
+        sessionStorage.setItem(
+            ROLE_KEY,
+            "admin"
+        );
+
+        return true;
+    }
+
+    if (
+        username === VIEWER_USERNAME &&
+        password === VIEWER_PASSWORD
+    ) {
+
+        sessionStorage.setItem(
+            LOGIN_KEY,
+            "true"
+        );
+        sessionStorage.setItem(
+            ROLE_KEY,
+            "viewer"
+        );
+
+        return true;
+    }
+
+    return false;
+}
+
+
+function adminLogout() {
+
+    sessionStorage.removeItem(
+        LOGIN_KEY
+    );
+
+        sessionStorage.removeItem(
+        ROLE_KEY
+    );
+
+window.location.href =
+        "admin-login.html";
+}
+
+
+/* =====================================================
+   GET DATA
+===================================================== */
+
+function getState() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(
+                STORAGE_KEY
+            );
+
+        if (!raw) {
+
+            return {
+                ...emptyState
+            };
+
+        }
+
+        const parsed =
+            JSON.parse(raw);
+
+        return {
+            announcements:
+                Array.isArray(parsed.announcements)
+                    ? parsed.announcements
+                    : [],
+
+            schedule:
+                Array.isArray(parsed.schedule)
+                    ? parsed.schedule
+                    : [],
+
+            posts:
+                Array.isArray(parsed.posts)
+                    ? parsed.posts
+                    : [],
+
+            bookings:
+                Array.isArray(parsed.bookings)
+                    ? parsed.bookings
+                    : []
+        };
+
+    } catch (error) {
+
+        console.error(
+            "Unable to read admin data:",
+            error
+        );
+
+        return {
+            ...emptyState
+        };
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE DATA
+===================================================== */
+
+function saveState(state) {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   DATE FORMAT
+===================================================== */
+
+function formatDate(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+    const date =
+        new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return escapeHTML(value);
+    }
+
+    return date.toLocaleDateString(
+        "en-PH",
+        {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        }
+    );
+
+}
+
+
+function formatDateTime(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+    const date =
+        new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return escapeHTML(value);
+    }
+
+    return date.toLocaleString(
+        "en-PH",
+        {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "admin-toast"
+        );
+
+    if (!toast) {
+        return;
+    }
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        showToast.timer
+    );
+
+    showToast.timer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            3000
+        );
+
+}
+
+
+/* =====================================================
+   LOGIN PAGE
+===================================================== */
+
+function initializeLogin() {
+
+    const form =
+        document.getElementById(
+            "admin-login-form"
+        );
+
+    if (!form) {
+        return;
+    }
+
+
+    if (isAdminLoggedIn()) {
+
+        window.location.href =
+            "admin.html";
+
+        return;
+    }
+
+
+    const password =
+        document.getElementById(
+            "password"
+        );
+
+    const toggle =
+        document.getElementById(
+            "toggle-password"
+        );
+
+
+    if (toggle && password) {
+
+        toggle.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    password.type ===
+                    "password"
+                ) {
+
+                    password.type =
+                        "text";
+
+                    toggle.textContent =
+                        "Hide";
+
+                } else {
+
+                    password.type =
+                        "password";
+
+                    toggle.textContent =
+                        "Show";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    form.addEventListener(
+        "submit",
+        (event) => {
+
+            event.preventDefault();
+
+
+            const username =
+                document.getElementById(
+                    "username"
+                ).value.trim();
+
+            const passwordValue =
+                password.value;
+
+
+            const error =
+                document.getElementById(
+                    "login-error"
+                );
+
+
+            if (
+                adminLogin(
+                    username,
+                    passwordValue
+                )
+            ) {
+
+                window.location.href =
+                    "admin.html";
+
+                return;
+            }
+
+
+            error.textContent =
+                "Invalid username or password.";
+
+            error.style.display =
+                "block";
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
+
+let currentSection =
+    "dashboard";
+
+
+function showSection(section) {
+
+    currentSection =
+        section;
+
+
+    document
+        .querySelectorAll(
+            ".admin-section"
+        )
+        .forEach(
+            element => {
+
+                element.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    const selected =
+        document.getElementById(
+            section + "-section"
+        );
+
+
+    if (selected) {
+
+        selected.classList.add(
+            "active"
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".menu-item"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.section ===
+                    section
+                );
+
+            }
+        );
+
+
+    updateHeader(section);
+
+
+    if (section === "dashboard") {
+        renderDashboard();
+    }
+
+    if (section === "announcements") {
+        renderAnnouncements();
+    }
+
+    if (section === "schedule") {
+        renderSchedule();
+    }
+
+    if (section === "posts") {
+        renderPosts();
+    }
+
+    if (section === "bookings") {
+        renderBookings();
+    }
+
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+    if (sidebar) {
+        sidebar.classList.remove(
+            "open"
+        );
+    }
+
+}
+
+
+function updateHeader(section) {
+
+    const title =
+        document.getElementById(
+            "page-title"
+        );
+
+    const description =
+        document.getElementById(
+            "page-description"
+        );
+
+
+    const information = {
+
+        dashboard: [
+            "Dashboard",
+            "Welcome to the Divine Mercy administration panel."
+        ],
+
+        announcements: [
+            "Announcements",
+            "Manage parish announcements."
+        ],
+
+        schedule: [
+            "Schedule",
+            "Manage parish events and schedules."
+        ],
+
+        posts: [
+            "Posts",
+            "Manage parish social media posts."
+        ],
+
+        bookings: [
+            "Bookings",
+            "Manage parish booking requests."
+        ]
+
+    };
+
+
+    const data =
+        information[section] ||
+        information.dashboard;
+
+
+    title.textContent =
+        data[0];
+
+    description.textContent =
+        data[1];
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function renderDashboard() {
+
+    const state =
+        getState();
+
+
+    document.getElementById(
+        "stat-announcements"
+    ).textContent =
+        state.announcements.length;
+
+
+    document.getElementById(
+        "stat-schedule"
+    ).textContent =
+        state.schedule.length;
+
+
+    document.getElementById(
+        "stat-posts"
+    ).textContent =
+        state.posts.length;
+
+
+    document.getElementById(
+        "stat-bookings"
+    ).textContent =
+        state.bookings.length;
+
+
+    const pending =
+        state.bookings.filter(
+            item =>
+                item.status ===
+                "pending"
+        ).length;
+
+
+    const confirmed =
+        state.bookings.filter(
+            item =>
+                item.status ===
+                "confirmed"
+        ).length;
+
+
+    const completed =
+        state.bookings.filter(
+            item =>
+                item.status ===
+                "completed"
+        ).length;
+
+
+    const cancelled =
+        state.bookings.filter(
+            item =>
+                item.status ===
+                "cancelled"
+        ).length;
+
+
+    document.getElementById(
+        "stat-pending"
+    ).textContent =
+        pending;
+
+
+    document.getElementById(
+        "stat-confirmed"
+    ).textContent =
+        confirmed;
+
+
+    document.getElementById(
+        "stat-completed"
+    ).textContent =
+        completed;
+
+
+    document.getElementById(
+        "stat-cancelled"
+    ).textContent =
+        cancelled;
+
+}
+
+
+/* =====================================================
+   ANNOUNCEMENTS
+===================================================== */
+
+function renderAnnouncements() {
+
+    const container =
+        document.getElementById(
+            "admin-announcements"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    if (!state.announcements.length) {
+
+        container.innerHTML =
+            emptyHTML(
+                "📢",
+                "No announcements",
+                "There are currently no announcements."
+            );
+
+        return;
+    }
+
+
+    container.innerHTML =
+        state.announcements
+            .map(
+                item => {
+
+                    const priority =
+                        item.priority ||
+                        "normal";
+
+
+                    return `
+                        <div class="admin-record">
+
+                            <div class="record-top">
+
+                                <div>
+
+                                    <h3 class="record-title">
+                                        ${escapeHTML(item.title || "Untitled Announcement")}
+                                    </h3>
+
+                                    <div class="record-meta">
+
+                                        <span class="badge badge-${escapeHTML(priority)}">
+                                            ${escapeHTML(priority)}
+                                        </span>
+
+                                        <span class="meta">
+                                            Created ${formatDate(item.createdAt)}
+                                        </span>
+
+                                        ${
+                                            item.expiresAt
+                                                ? `<span class="meta">
+                                                    Expires ${formatDate(item.expiresAt)}
+                                                   </span>`
+                                                : ""
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <p class="record-content">
+                                ${escapeHTML(item.content || "")}
+                            </p>
+
+                            <div class="record-actions">
+
+                                <button
+                                    class="secondary-button"
+                                    onclick="editAnnouncement(${Number(item.id)})"
+                                >
+                                    ✏️ Edit
+                                </button>
+
+                                <button
+                                    class="danger-button"
+                                    onclick="deleteAnnouncement(${Number(item.id)})"
+                                >
+                                    🗑️ Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =====================================================
+   EDIT ANNOUNCEMENT
+===================================================== */
+
+function editAnnouncement(id) {
+
+    const state =
+        getState();
+
+    const item =
+        state.announcements.find(
+            entry =>
+                Number(entry.id) ===
+                Number(id)
+        );
+
+
+    if (!item) {
+
+        showToast(
+            "Announcement not found."
+        );
+
+        return;
+    }
+
+
+    openModal(
+        "Edit Announcement",
+        "Update the announcement information.",
+        `
+            <div class="form-group">
+
+                <label>
+                    Title
+                </label>
+
+                <input
+                    id="edit-ann-title"
+                    class="form-control"
+                    value="${escapeHTML(item.title)}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Content
+                </label>
+
+                <textarea
+                    id="edit-ann-content"
+                    class="form-control"
+                >${escapeHTML(item.content)}</textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Priority
+                </label>
+
+                <select
+                    id="edit-ann-priority"
+                    class="form-control"
+                >
+
+                    <option value="normal"
+                        ${item.priority === "normal" ? "selected" : ""}>
+                        Normal
+                    </option>
+
+                    <option value="low"
+                        ${item.priority === "low" ? "selected" : ""}>
+                        Low
+                    </option>
+
+                    <option value="high"
+                        ${item.priority === "high" ? "selected" : ""}>
+                        High
+                    </option>
+
+                    <option value="urgent"
+                        ${item.priority === "urgent" ? "selected" : ""}>
+                        Urgent
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Expiration Date
+                </label>
+
+                <input
+                    type="date"
+                    id="edit-ann-expires"
+                    class="form-control"
+                    value="${escapeHTML(item.expiresAt || "")}"
+                >
+
+            </div>
+        `,
+        () => {
+
+            item.title =
+                document.getElementById(
+                    "edit-ann-title"
+                ).value.trim();
+
+
+            item.content =
+                document.getElementById(
+                    "edit-ann-content"
+                ).value.trim();
+
+
+            item.priority =
+                document.getElementById(
+                    "edit-ann-priority"
+                ).value;
+
+
+            item.expiresAt =
+                document.getElementById(
+                    "edit-ann-expires"
+                ).value ||
+                null;
+
+
+            if (!item.title || !item.content) {
+
+                showToast(
+                    "Title and content are required."
+                );
+
+                return false;
+            }
+
+
+            saveState(state);
+
+            showToast(
+                "Announcement updated."
+            );
+
+            renderAnnouncements();
+
+            return true;
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   DELETE ANNOUNCEMENT
+===================================================== */
+
+function deleteAnnouncement(id) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete this announcement?"
+        )
+    ) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    state.announcements =
+        state.announcements.filter(
+            item =>
+                Number(item.id) !==
+                Number(id)
+        );
+
+
+    saveState(state);
+
+    renderAnnouncements();
+
+    renderDashboard();
+
+    showToast(
+        "Announcement deleted."
+    );
+
+}
+
+
+
+/* =====================================================
+   SCHEDULE
+===================================================== */
+
+function renderSchedule() {
+
+    const container =
+        document.getElementById(
+            "admin-schedule"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    if (!state.schedule.length) {
+
+        container.innerHTML =
+            emptyHTML(
+                "📅",
+                "No schedule",
+                "There are currently no schedule entries."
+            );
+
+        return;
+    }
+
+
+    const sorted =
+        [...state.schedule].sort(
+            (a, b) =>
+                String(
+                    a.startDateTime || ""
+                ).localeCompare(
+                    String(
+                        b.startDateTime || ""
+                    )
+                )
+        );
+
+
+    container.innerHTML =
+        sorted
+            .map(
+                item => {
+
+                    return `
+                        <div class="admin-record">
+
+                            <div class="record-top">
+
+                                <div>
+
+                                    <h3 class="record-title">
+                                        ${escapeHTML(item.title || "Untitled Event")}
+                                    </h3>
+
+                                    <div class="record-meta">
+
+                                        <span class="badge badge-normal">
+                                            ${escapeHTML(item.eventType || "event")}
+                                        </span>
+
+                                        <span class="meta">
+                                            📅 ${formatDateTime(item.startDateTime)}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <p class="record-content">
+                                ${escapeHTML(item.description || "No description.")}
+                            </p>
+
+
+                            <div class="record-meta">
+
+                                <span class="meta">
+                                    📍 ${escapeHTML(item.location || "No location")}
+                                </span>
+
+                                ${
+                                    item.celebrant
+                                        ? `
+                                            <span class="meta">
+                                                ✝ ${escapeHTML(item.celebrant)}
+                                            </span>
+                                          `
+                                        : ""
+                                }
+
+                            </div>
+
+
+                            <div class="record-actions">
+
+                                <button
+                                    class="secondary-button"
+                                    onclick="editSchedule(${Number(item.id)})"
+                                >
+                                    ✏️ Edit
+                                </button>
+
+                                <button
+                                    class="danger-button"
+                                    onclick="deleteSchedule(${Number(item.id)})"
+                                >
+                                    🗑️ Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =====================================================
+   EDIT SCHEDULE
+===================================================== */
+
+function editSchedule(id) {
+
+    const state =
+        getState();
+
+    const item =
+        state.schedule.find(
+            entry =>
+                Number(entry.id) ===
+                Number(id)
+        );
+
+
+    if (!item) {
+
+        showToast(
+            "Schedule entry not found."
+        );
+
+        return;
+    }
+
+
+    openModal(
+        "Edit Schedule",
+        "Update the schedule information.",
+        `
+            <div class="form-group">
+
+                <label>
+                    Title
+                </label>
+
+                <input
+                    id="edit-sch-title"
+                    class="form-control"
+                    value="${escapeHTML(item.title)}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="edit-sch-description"
+                    class="form-control"
+                >${escapeHTML(item.description || "")}</textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Event Type
+                </label>
+
+                <select
+                    id="edit-sch-type"
+                    class="form-control"
+                >
+
+                    ${scheduleOption(
+                        "mass",
+                        "Mass",
+                        item.eventType
+                    )}
+
+                    ${scheduleOption(
+                        "event",
+                        "Event",
+                        item.eventType
+                    )}
+
+                    ${scheduleOption(
+                        "special_mass",
+                        "Special Mass",
+                        item.eventType
+                    )}
+
+                    ${scheduleOption(
+                        "novena",
+                        "Novena",
+                        item.eventType
+                    )}
+
+                    ${scheduleOption(
+                        "confession",
+                        "Confession",
+                        item.eventType
+                    )}
+
+                    ${scheduleOption(
+                        "other",
+                        "Other",
+                        item.eventType
+                    )}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Start Date & Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="edit-sch-start"
+                    class="form-control"
+                    value="${escapeHTML(item.startDateTime || "")}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    End Date & Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="edit-sch-end"
+                    class="form-control"
+                    value="${escapeHTML(item.endDateTime || "")}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    id="edit-sch-location"
+                    class="form-control"
+                    value="${escapeHTML(item.location || "")}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Celebrant
+                </label>
+
+                <input
+                    id="edit-sch-celebrant"
+                    class="form-control"
+                    value="${escapeHTML(item.celebrant || "")}"
+                >
+
+            </div>
+        `,
+        () => {
+
+            item.title =
+                document.getElementById(
+                    "edit-sch-title"
+                ).value.trim();
+
+
+            item.description =
+                document.getElementById(
+                    "edit-sch-description"
+                ).value.trim();
+
+
+            item.eventType =
+                document.getElementById(
+                    "edit-sch-type"
+                ).value;
+
+
+            item.startDateTime =
+                document.getElementById(
+                    "edit-sch-start"
+                ).value;
+
+
+            item.endDateTime =
+                document.getElementById(
+                    "edit-sch-end"
+                ).value;
+
+
+            item.location =
+                document.getElementById(
+                    "edit-sch-location"
+                ).value.trim();
+
+
+            item.celebrant =
+                document.getElementById(
+                    "edit-sch-celebrant"
+                ).value.trim();
+
+
+            if (
+                !item.title ||
+                !item.startDateTime
+            ) {
+
+                showToast(
+                    "Title and start date are required."
+                );
+
+                return false;
+            }
+
+
+            saveState(state);
+
+            renderSchedule();
+
+            showToast(
+                "Schedule updated."
+            );
+
+            return true;
+
+        }
+    );
+
+}
+
+
+function scheduleOption(
+    value,
+    label,
+    selected
+) {
+
+    return `
+        <option
+            value="${value}"
+            ${selected === value ? "selected" : ""}
+        >
+            ${label}
+        </option>
+    `;
+
+}
+
+
+/* =====================================================
+   DELETE SCHEDULE
+===================================================== */
+
+function deleteSchedule(id) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete this schedule?"
+        )
+    ) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    state.schedule =
+        state.schedule.filter(
+            item =>
+                Number(item.id) !==
+                Number(id)
+        );
+
+
+    saveState(state);
+
+    renderSchedule();
+
+    renderDashboard();
+
+    showToast(
+        "Schedule deleted."
+    );
+
+}
+
+
+/* =====================================================
+   POSTS
+===================================================== */
+
+function renderPosts() {
+
+    const container =
+        document.getElementById(
+            "admin-posts"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    if (!state.posts.length) {
+
+        container.innerHTML =
+            emptyHTML(
+                "📣",
+                "No posts",
+                "There are currently no parish posts."
+            );
+
+        return;
+    }
+
+
+    container.innerHTML =
+        state.posts
+            .map(
+                item => {
+
+                    return `
+                        <div class="admin-record">
+
+                            <div class="record-top">
+
+                                <div>
+
+                                    <h3 class="record-title">
+                                        Parish Post #${Number(item.id)}
+                                    </h3>
+
+                                    <div class="record-meta">
+
+                                        <span class="badge badge-${escapeHTML(item.status || "draft")}">
+                                            ${escapeHTML(item.status || "draft")}
+                                        </span>
+
+                                        ${
+                                            item.platforms
+                                                ? item.platforms
+                                                    .map(
+                                                        platform =>
+                                                            `<span class="meta">
+                                                                ${escapeHTML(platform)}
+                                                             </span>`
+                                                    )
+                                                    .join("")
+                                                : ""
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <p class="record-content">
+                                ${escapeHTML(item.content || "")}
+                            </p>
+
+
+                            <div class="record-meta">
+
+                                ${
+                                    item.scheduledAt
+                                        ? `
+                                            <span class="meta">
+                                                🗓 ${formatDateTime(item.scheduledAt)}
+                                            </span>
+                                          `
+                                        : ""
+                                }
+
+                                ${
+                                    item.publishedAt
+                                        ? `
+                                            <span class="meta">
+                                                ✓ Published ${formatDateTime(item.publishedAt)}
+                                            </span>
+                                          `
+                                        : ""
+                                }
+
+                            </div>
+
+
+                            <div class="record-actions">
+
+                                <button
+                                    class="secondary-button"
+                                    onclick="editPost(${Number(item.id)})"
+                                >
+                                    ✏️ Edit
+                                </button>
+
+                                <button
+                                    class="danger-button"
+                                    onclick="deletePost(${Number(item.id)})"
+                                >
+                                    🗑️ Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =====================================================
+   EDIT POST
+===================================================== */
+
+function editPost(id) {
+
+    const state =
+        getState();
+
+    const item =
+        state.posts.find(
+            entry =>
+                Number(entry.id) ===
+                Number(id)
+        );
+
+
+    if (!item) {
+
+        showToast(
+            "Post not found."
+        );
+
+        return;
+    }
+
+
+    const platforms =
+        Array.isArray(item.platforms)
+            ? item.platforms
+            : [];
+
+
+    openModal(
+        "Edit Parish Post",
+        "Update the post information.",
+        `
+            <div class="form-group">
+
+                <label>
+                    Post Content
+                </label>
+
+                <textarea
+                    id="edit-post-content"
+                    class="form-control"
+                >${escapeHTML(item.content || "")}</textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select
+                    id="edit-post-status"
+                    class="form-control"
+                >
+
+                    ${postOption(
+                        "draft",
+                        "Draft",
+                        item.status
+                    )}
+
+                    ${postOption(
+                        "scheduled",
+                        "Scheduled",
+                        item.status
+                    )}
+
+                    ${postOption(
+                        "published",
+                        "Published",
+                        item.status
+                    )}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Platforms
+                </label>
+
+                <div>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="platform-facebook"
+                            ${platforms.includes("facebook") ? "checked" : ""}
+                        >
+                        Facebook
+                    </label>
+
+                    <br>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="platform-instagram"
+                            ${platforms.includes("instagram") ? "checked" : ""}
+                        >
+                        Instagram
+                    </label>
+
+                    <br>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="platform-twitter"
+                            ${platforms.includes("twitter") ? "checked" : ""}
+                        >
+                        Twitter
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Scheduled At
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="edit-post-scheduled"
+                    class="form-control"
+                    value="${escapeHTML(item.scheduledAt || "")}"
+                >
+
+            </div>
+        `,
+        () => {
+
+            item.content =
+                document.getElementById(
+                    "edit-post-content"
+                ).value.trim();
+
+
+            item.status =
+                document.getElementById(
+                    "edit-post-status"
+                ).value;
+
+
+            item.platforms = [];
+
+
+            if (
+                document.getElementById(
+                    "platform-facebook"
+                ).checked
+            ) {
+
+                item.platforms.push(
+                    "facebook"
+                );
+
+            }
+
+
+            if (
+                document.getElementById(
+                    "platform-instagram"
+                ).checked
+            ) {
+
+                item.platforms.push(
+                    "instagram"
+                );
+
+            }
+
+
+            if (
+                document.getElementById(
+                    "platform-twitter"
+                ).checked
+            ) {
+
+                item.platforms.push(
+                    "twitter"
+                );
+
+            }
+
+
+            item.scheduledAt =
+                document.getElementById(
+                    "edit-post-scheduled"
+                ).value;
+
+
+            if (
+                !item.content ||
+                !item.platforms.length
+            ) {
+
+                showToast(
+                    "Post content and at least one platform are required."
+                );
+
+                return false;
+            }
+
+
+            saveState(state);
+
+            renderPosts();
+
+            showToast(
+                "Post updated."
+            );
+
+            return true;
+
+        }
+    );
+
+}
+
+
+function postOption(
+    value,
+    label,
+    selected
+) {
+
+    return `
+        <option
+            value="${value}"
+            ${selected === value ? "selected" : ""}
+        >
+            ${label}
+        </option>
+    `;
+
+}
+
+
+/* =====================================================
+   DELETE POST
+===================================================== */
+
+function deletePost(id) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete this post?"
+        )
+    ) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    state.posts =
+        state.posts.filter(
+            item =>
+                Number(item.id) !==
+                Number(id)
+        );
+
+
+    saveState(state);
+
+    renderPosts();
+
+    renderDashboard();
+
+    showToast(
+        "Post deleted."
+    );
+
+}
+
+
+/* =====================================================
+   BOOKINGS
+===================================================== */
+
+let bookingFilter =
+    "all";
+
+
+function renderBookings() {
+
+    const container =
+        document.getElementById(
+            "admin-bookings"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    let bookings =
+        [...state.bookings];
+
+
+    if (
+        bookingFilter !==
+        "all"
+    ) {
+
+        bookings =
+            bookings.filter(
+                item =>
+                    item.status ===
+                    bookingFilter
+            );
+
+    }
+
+
+    if (!bookings.length) {
+
+        container.innerHTML =
+            emptyHTML(
+                "🙏",
+                "No bookings",
+                "There are no booking requests under this filter."
+            );
+
+        return;
+    }
+
+
+    container.innerHTML =
+        bookings
+            .map(
+                item => {
+
+                    const status =
+                        item.status ||
+                        "pending";
+
+
+                    const type =
+                        item.service ||
+                        item.type ||
+                        item.serviceType ||
+                        "Booking";
+
+
+                    const name =
+                        item.subject ||
+                        item.name ||
+                        item.fullName ||
+                        item.bookingName ||
+                        "No name provided";
+
+
+                    const preferredDate =
+                        item.preferredDate ||
+                        item.date ||
+                        item.bookingDate ||
+                        item.eventDate ||
+                        "";
+
+
+                    return `
+                        <div class="admin-record">
+
+                            <div class="record-top">
+
+                                <div>
+
+                                    <h3 class="record-title">
+                                        ${escapeHTML(name)}
+                                    </h3>
+
+                                    <div class="record-meta">
+
+                                        <span class="badge badge-${escapeHTML(status)}">
+                                            ${escapeHTML(status)}
+                                        </span>
+
+                                        <span class="meta">
+                                            ${escapeHTML(type)}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="record-meta">
+
+                                <span class="meta">
+                                    📅 Preferred:
+                                    ${formatDate(preferredDate)}
+                                </span>
+
+                                ${
+                                    item.alternateDate
+                                        ? `
+                                            <span class="meta">
+                                                📅 Alternate:
+                                                ${formatDate(item.alternateDate)}
+                                            </span>
+                                          `
+                                        : ""
+                                }
+
+                                <span class="meta">
+                                    📝 Requested:
+                                    ${formatDate(item.createdAt)}
+                                </span>
+
+                            </div>
+
+
+                            ${
+                                item.notes
+                                    ? `
+                                        <p class="record-content">
+                                            <strong>Notes:</strong>
+                                            ${escapeHTML(item.notes)}
+                                        </p>
+                                      `
+                                    : ""
+                            }
+
+
+                            ${
+                                item.adminNotes
+                                    ? `
+                                        <p class="record-content">
+                                            <strong>Admin Notes:</strong>
+                                            ${escapeHTML(item.adminNotes)}
+                                        </p>
+                                      `
+                                    : ""
+                            }
+
+
+                            ${
+                                item.amount !== undefined
+                                    ? `
+                                        <div class="record-meta">
+                                            <span class="meta">
+                                                Amount:
+                                                ₱${escapeHTML(item.amount)}
+                                            </span>
+                                        </div>
+                                      `
+                                    : ""
+                            }
+
+
+                            <div class="record-actions">
+
+                                <button
+                                    class="secondary-button"
+                                    onclick="editBooking(${Number(item.id)})"
+                                >
+                                    ✏️ Manage
+                                </button>
+
+                                <button
+                                    class="danger-button"
+                                    onclick="deleteBooking(${Number(item.id)})"
+                                >
+                                    🗑️ Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =====================================================
+   EDIT BOOKING
+===================================================== */
+
+function editBooking(id) {
+
+    const state =
+        getState();
+
+    const item =
+        state.bookings.find(
+            entry =>
+                Number(entry.id) ===
+                Number(id)
+        );
+
+
+    if (!item) {
+
+        showToast(
+            "Booking not found."
+        );
+
+        return;
+    }
+
+
+    const name =
+        item.subject ||
+        item.name ||
+        item.fullName ||
+        item.bookingName ||
+        "";
+
+
+    const preferredDate =
+        item.preferredDate ||
+        item.date ||
+        item.bookingDate ||
+        item.eventDate ||
+        "";
+
+
+    const serviceType =
+        item.serviceType ||
+        item.type ||
+        "";
+
+
+    openModal(
+        "Manage Booking",
+        "Update the booking request without changing the original booking page.",
+        `
+            <div class="form-group">
+
+                <label>
+                    Service Type
+                </label>
+
+                <select
+                    id="edit-book-type"
+                    class="form-control"
+                >
+
+                    ${bookingOption(
+                        "baptism",
+                        "Baptism",
+                        serviceType
+                    )}
+
+                    ${bookingOption(
+                        "burial",
+                        "Burial",
+                        serviceType
+                    )}
+
+                    ${bookingOption(
+                        "wedding",
+                        "Wedding",
+                        serviceType
+                    )}
+
+                    ${bookingOption(
+                        "thanksgiving_mass",
+                        "Thanksgiving Mass",
+                        serviceType
+                    )}
+
+                    ${bookingOption(
+                        "mass_request",
+                        "Mass Request",
+                        serviceType
+                    )}
+
+                    ${bookingOption(
+                        "souls_mass",
+                        "Souls Mass",
+                        serviceType
+                    )}
+
+                    ${bookingOption(
+                        "other",
+                        "Other",
+                        serviceType
+                    )}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Name / Subject
+                </label>
+
+                <input
+                    id="edit-book-name"
+                    class="form-control"
+                    value="${escapeHTML(name)}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Preferred Date
+                </label>
+
+                <input
+                    type="date"
+                    id="edit-book-date"
+                    class="form-control"
+                    value="${escapeHTML(preferredDate)}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Alternate Date
+                </label>
+
+                <input
+                    type="date"
+                    id="edit-book-alt-date"
+                    class="form-control"
+                    value="${escapeHTML(item.alternateDate || "")}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select
+                    id="edit-book-status"
+                    class="form-control"
+                >
+
+                    ${bookingOption(
+                        "pending",
+                        "Pending",
+                        item.status || "pending"
+                    )}
+
+                    ${bookingOption(
+                        "confirmed",
+                        "Confirmed",
+                        item.status
+                    )}
+
+                    ${bookingOption(
+                        "completed",
+                        "Completed",
+                        item.status
+                    )}
+
+                    ${bookingOption(
+                        "cancelled",
+                        "Cancelled",
+                        item.status
+                    )}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Notes / Special Requests
+                </label>
+
+                <textarea
+                    id="edit-book-notes"
+                    class="form-control"
+                >${escapeHTML(item.notes || "")}</textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Admin Notes
+                </label>
+
+                <textarea
+                    id="edit-book-admin-notes"
+                    class="form-control"
+                >${escapeHTML(item.adminNotes || "")}</textarea>
+
+            </div>
+        `,
+        () => {
+
+            const newType =
+                document.getElementById(
+                    "edit-book-type"
+                ).value;
+
+
+            const newName =
+                document.getElementById(
+                    "edit-book-name"
+                ).value.trim();
+
+
+            const newDate =
+                document.getElementById(
+                    "edit-book-date"
+                ).value;
+
+
+            const newAltDate =
+                document.getElementById(
+                    "edit-book-alt-date"
+                ).value;
+
+
+            const newStatus =
+                document.getElementById(
+                    "edit-book-status"
+                ).value;
+
+
+            const newNotes =
+                document.getElementById(
+                    "edit-book-notes"
+                ).value.trim();
+
+
+            const newAdminNotes =
+                document.getElementById(
+                    "edit-book-admin-notes"
+                ).value.trim();
+
+
+            if (!newDate) {
+
+                showToast(
+                    "Preferred date is required."
+                );
+
+                return false;
+            }
+
+
+            /*
+             * Preserve the existing booking
+             * structure as much as possible.
+             */
+
+            item.type =
+                newType;
+
+
+            item.serviceType =
+                item.serviceType !== undefined
+                    ? newType
+                    : item.serviceType;
+
+
+            if (item.subject !== undefined) {
+                item.subject =
+                    newName;
+            }
+
+            if (item.name !== undefined) {
+                item.name =
+                    newName;
+            }
+
+            if (item.fullName !== undefined) {
+                item.fullName =
+                    newName;
+            }
+
+            if (item.bookingName !== undefined) {
+                item.bookingName =
+                    newName;
+            }
+
+            if (
+                item.subject === undefined &&
+                item.name === undefined &&
+                item.fullName === undefined &&
+                item.bookingName === undefined
+            ) {
+
+                item.subject =
+                    newName;
+
+            }
+
+
+            if (
+                item.preferredDate !== undefined
+            ) {
+
+                item.preferredDate =
+                    newDate;
+
+            } else if (
+                item.date !== undefined
+            ) {
+
+                item.date =
+                    newDate;
+
+            } else if (
+                item.bookingDate !== undefined
+            ) {
+
+                item.bookingDate =
+                    newDate;
+
+            } else if (
+                item.eventDate !== undefined
+            ) {
+
+                item.eventDate =
+                    newDate;
+
+            } else {
+
+                item.preferredDate =
+                    newDate;
+
+            }
+
+
+            item.alternateDate =
+                newAltDate;
+
+
+            item.status =
+                newStatus;
+
+
+            item.notes =
+                newNotes;
+
+
+            item.adminNotes =
+                newAdminNotes;
+
+
+            saveState(state);
+
+            renderBookings();
+
+            renderDashboard();
+
+            showToast(
+                "Booking updated successfully."
+            );
+
+            return true;
+
+        }
+    );
+
+}
+
+
+function bookingOption(
+    value,
+    label,
+    selected
+) {
+
+    return `
+        <option
+            value="${value}"
+            ${selected === value ? "selected" : ""}
+        >
+            ${label}
+        </option>
+    `;
+
+}
+
+
+/* =====================================================
+   DELETE BOOKING
+===================================================== */
+
+function deleteBooking(id) {
+
+    if (
+        !confirm(
+            "Are you sure you want to permanently delete this booking?"
+        )
+    ) {
+        return;
+    }
+
+
+    const state =
+        getState();
+
+
+    state.bookings =
+        state.bookings.filter(
+            item =>
+                Number(item.id) !==
+                Number(id)
+        );
+
+
+    saveState(state);
+
+    renderBookings();
+
+    renderDashboard();
+
+    showToast(
+        "Booking deleted successfully."
+    );
+
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+function openModal(
+    title,
+    subtitle,
+    content,
+    saveFunction
+) {
+
+    const modal =
+        document.getElementById(
+            "admin-modal"
+        );
+
+
+    const titleElement =
+        document.getElementById(
+            "modal-title"
+        );
+
+
+    const subtitleElement =
+        document.getElementById(
+            "modal-subtitle"
+        );
+
+
+    const contentElement =
+        document.getElementById(
+            "modal-content"
+        );
+
+
+    const saveButton =
+        document.getElementById(
+            "modal-save"
+        );
+
+
+    titleElement.textContent =
+        title;
+
+
+    subtitleElement.textContent =
+        subtitle;
+
+
+    contentElement.innerHTML =
+        content;
+
+
+    modal.classList.add(
+        "open"
+    );
+
+
+    saveButton.onclick =
+        () => {
+
+            const success =
+                saveFunction();
+
+
+            if (success !== false) {
+
+                closeModal();
+
+            }
+
+        };
+
+}
+
+
+function closeModal() {
+
+    const modal =
+        document.getElementById(
+            "admin-modal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "open"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   EMPTY HTML
+===================================================== */
+
+function emptyHTML(
+    icon,
+    title,
+    description
+) {
+
+    return `
+        <div class="empty-state">
+
+            <div class="empty-state-icon">
+                ${icon}
+            </div>
+
+            <h3>
+                ${escapeHTML(title)}
+            </h3>
+
+            <p>
+                ${escapeHTML(description)}
+            </p>
+
+        </div>
+    `;
+
+}
+
+
+/* =====================================================
+   EVENT LISTENERS
+===================================================== */
+
+function initializeAdmin() {
+
+    if (!isAdminLoggedIn()) {
+
+        window.location.href =
+            "admin-login.html";
+
+        return;
+    }
+
+
+    /* SIDEBAR */
+
+    document
+        .querySelectorAll(
+            ".menu-item"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        showSection(
+                            button.dataset.section
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* QUICK ACTIONS */
+
+    document
+        .querySelectorAll(
+            "[data-go-section]"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        showSection(
+                            button.dataset.goSection
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* MOBILE MENU */
+
+    const mobileMenu =
+        document.getElementById(
+            "mobile-menu"
+        );
+
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+
+    if (
+        mobileMenu &&
+        sidebar
+    ) {
+
+        mobileMenu.addEventListener(
+            "click",
+            () => {
+
+                sidebar.classList.toggle(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* LOGOUT */
+
+    const logout =
+        document.getElementById(
+            "logout-button"
+        );
+
+
+    if (logout) {
+
+        logout.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    confirm(
+                        "Do you want to logout?"
+                    )
+                ) {
+
+                    adminLogout();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* MODAL CLOSE */
+
+    document
+        .getElementById(
+            "modal-close"
+        )
+        .addEventListener(
+            "click",
+            closeModal
+        );
+
+
+    document
+        .getElementById(
+            "modal-cancel"
+        )
+        .addEventListener(
+            "click",
+            closeModal
+        );
+
+
+    document
+        .getElementById(
+            "admin-modal"
+        )
+        .addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target.id ===
+                    "admin-modal"
+                ) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+
+    /* REFRESH */
+
+    document
+        .getElementById(
+            "refresh-announcements"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                renderAnnouncements();
+
+                showToast(
+                    "Announcements refreshed."
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "refresh-schedule"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                renderSchedule();
+
+                showToast(
+                    "Schedule refreshed."
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "refresh-posts"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                renderPosts();
+
+                showToast(
+                    "Posts refreshed."
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "refresh-bookings"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                renderBookings();
+
+                showToast(
+                    "Bookings refreshed."
+                );
+
+            }
+        );
+
+
+    /* BOOKING FILTER */
+
+    document
+        .querySelectorAll(
+            ".booking-filter-button"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        document
+                            .querySelectorAll(
+                                ".booking-filter-button"
+                            )
+                            .forEach(
+                                btn =>
+                                    btn.classList.remove(
+                                        "active"
+                                    )
+                            );
+
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        bookingFilter =
+                            button.dataset
+                                .bookingFilter;
+
+
+                        renderBookings();
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* INITIAL PAGE */
+
+    showSection(
+        "dashboard"
+    );
+
+}
+
+
+/* =====================================================
+   DETECT PAGE
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        if (
+            document.getElementById(
+                "admin-login-form"
+            )
+        ) {
+
+            initializeLogin();
+
+        }
+
+
+        if (
+            document.getElementById(
+                "dashboard-section"
+            )
+        ) {
+
+            initializeAdmin();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CROSS-TAB REFRESH
+   If another existing page changes
+   dm_church_data, admin dashboard
+   can refresh when focused.
+===================================================== */
+
+window.addEventListener(
+    "storage",
+    event => {
+
+        if (
+            event.key ===
+            STORAGE_KEY
+        ) {
+
+            if (
+                currentSection ===
+                "dashboard"
+            ) {
+
+                renderDashboard();
+
+            }
+
+            if (
+                currentSection ===
+                "announcements"
+            ) {
+
+                renderAnnouncements();
+
+            }
+
+            if (
+                currentSection ===
+                "schedule"
+            ) {
+
+                renderSchedule();
+
+            }
+
+            if (
+                currentSection ===
+                "posts"
+            ) {
+
+                renderPosts();
+
+            }
+
+            if (
+                currentSection ===
+                "bookings"
+            ) {
+
+                renderBookings();
+
+            }
+
+        }
+
+    }
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attendance QR Display | Divine Mercy</title>
+<style>
+:root{--red:#b91c1c;--dark:#7f1d1d;--bg:#f5f6fa;--muted:#667085}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:#202633;min-height:100vh;padding:20px}
+.wrap{width:min(100%,760px);margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.brand{color:var(--red);font-weight:800;letter-spacing:.04em}
+.card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 12px 35px #00000012;text-align:center;margin:14px 0}
+h1{font-size:25px;margin:8px 0;color:#202633}
+.muted{color:var(--muted);font-size:14px}
+.qr{display:flex;justify-content:center;align-items:center;margin:24px auto;padding:16px;background:#fff;width:max-content;max-width:100%;border:1px solid #eee;border-radius:12px}
+.qr canvas,.qr img{width:min( min(68vw,360px), 360px)!important;height:auto!important}
+.btn{border:0;border-radius:9px;background:var(--red);color:white;padding:11px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.event{border-top:1px solid #eee;padding:20px 0}
+.error{color:#9f1239;background:#fff1f2;padding:14px;border-radius:10px}
+@media print{body{background:white;padding:0}.top,.btn{display:none!important}.card{box-shadow:none;break-inside:avoid}.qr{border:0}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="top"><div class="brand">✝ DIVINE MERCY</div><div><button class="btn" onclick="window.print()">Print QR Code</button> <a class="btn" href="index.html">Home</a></div></div>
+<div class="card">
+<h1>Attendance QR Code Display</h1>
+<p class="muted">Scan the QR code for your attendance event. Enter your name and ministry to record Time In and Time Out.</p>
+<div id="qr-list">Loading QR code…</div>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+ const STORAGE_KEY='dm_church_data';
+ // This is a public QR display only. Attendance records are never read or displayed here.
+ let state={};try{state=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(e){}
+ const events=Array.isArray(state.attendanceEvents)?state.attendanceEvents:[];
+ const requested=new URLSearchParams(location.search).get('event');
+ const shown=requested?events.filter(e=>e.id===requested):events;
+ const root=document.getElementById('qr-list');
+ if(!shown.length){root.innerHTML='<p class="muted">No attendance QR codes are available yet. Please ask the parish administrator to create an attendance event.</p>';return;}
+ root.innerHTML=shown.map((e,i)=>'<section class="event"><h1></h1><p class="muted"></p><div class="qr" id="qr-'+i+'"></div><p class="muted">Scan using your phone camera</p><a class="btn" target="_blank" rel="noopener" href="attendance.html?event='+encodeURIComponent(e.id)+'">Open Attendance Form</a></section>').join('');
+ shown.forEach((e,i)=>{const section=root.children[i];section.querySelector('h1').textContent=e.name;section.querySelector('p').textContent=e.date;const url=new URL('attendance.html?event='+encodeURIComponent(e.id),location.href).href;new QRCode(document.getElementById('qr-'+i),{text:url,width:360,height:360,correctLevel:QRCode.CorrectLevel.H});});
+})();
+</script>
+</body>
+</html>

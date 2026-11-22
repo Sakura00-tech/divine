@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Our Parish | The National Shrine and Parish of the Divine Mercy</title>
+<style>
+
+:root{
+  --navy:#b91c1c; --navy-dark:#7f1d1d; --gold:#b91c1c; --gold-light:#fecaca;
+  --bg:#f8f6f2; --white:#fff; --text:#333; --muted:#666; --border:#e6e0d5;
+  --shadow:0 10px 30px rgba(13,43,82,.10); --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+#navbar{
+  position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
+  gap:20px;padding:14px 5%;background:rgba(255,255,255,.97);border-bottom:1px solid var(--border);
+  box-shadow:0 2px 12px rgba(0,0,0,.05)
+}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy)}
+.nav-logo{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:var(--gold);font-size:22px}
+.nav-title{font-weight:700;font-size:14px}.nav-subtitle{font-size:12px;color:var(--muted)}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-links a{padding:9px 12px;border-radius:9px;text-decoration:none;font-size:14px;color:var(--navy)}
+.nav-links a:hover,.nav-links a.active{background:#f2ead5;color:var(--navy)}
+#hamburger{display:none;border:0;background:transparent;color:var(--navy);padding:7px}
+#hamburger span{display:block;width:24px;height:2px;background:var(--navy);margin:5px 0}
+main{min-height:calc(100vh - 150px)}
+.page-header{padding:70px 5% 40px;text-align:center;background:linear-gradient(135deg,#fff,#f3eee3)}
+.section-eyebrow{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.page-header h1{margin:8px 0;font-size:clamp(2rem,5vw,3.2rem);color:var(--navy)}
+.page-header p{margin:0;color:var(--muted)}
+.page-content{width:min(1100px,90%);margin:0 auto;padding:35px 0 70px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px;flex-wrap:wrap}
+.search-input{width:min(420px,100%);padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:none}
+.search-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(199,163,75,.12)}
+.cards-list{display:grid;gap:16px}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card h3{color:var(--navy);margin:6px 0 10px}
+.card p{color:#555}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;background:#eee;color:#444;margin-right:5px}
+.badge-urgent{background:#fee2e2;color:#b91c1c}.badge-high{background:#fef3c7;color:#92400e}
+.badge-normal{background:#dbeafe;color:#1d4ed8}.badge-low{background:#f3f4f6;color:#6b7280}
+.badge-pending{background:#fef3c7;color:#92400e}.badge-confirmed{background:#dcfce7;color:#166534}
+.badge-completed{background:#dbeafe;color:#1d4ed8}.badge-cancelled{background:#fee2e2;color:#b91c1c}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}
+.tab-btn{border:1px solid var(--border);background:#fff;color:var(--navy);padding:8px 13px;border-radius:9px}
+.tab-btn.active,.tab-btn:hover{background:var(--navy);color:#fff}
+.booking-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.booking-type-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:.2s}
+.booking-type-card:hover{transform:translateY(-3px);border-color:var(--gold)}
+.booking-type-icon{font-size:30px}.booking-type-card h4{margin:10px 0 4px;color:var(--navy)}.booking-type-card span{color:var(--gold);font-weight:700}
+.divider{border:0;border-top:1px solid var(--border);margin:40px 0}
+footer{background:var(--navy);color:#fff;text-align:center;padding:30px}
+#toast-container{position:fixed;right:20px;bottom:20px;z-index:3000;display:grid;gap:8px}
+.toast{background:var(--navy);color:#fff;padding:12px 16px;border-radius:10px;box-shadow:var(--shadow)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;display:grid;place-items:center;padding:20px}
+.modal{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-header,.modal-footer{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border)}
+.modal-footer{border-top:1px solid var(--border);border-bottom:0;justify-content:flex-end}
+.modal-body{padding:22px}
+.modal-close{border:0;background:transparent;font-size:20px}
+.btn{border:0;border-radius:9px;padding:9px 13px;font-weight:700}.btn-primary{background:var(--navy);color:#fff}.btn-secondary{background:#eee;color:#333}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-sm{font-size:12px}
+.form-group{margin-bottom:15px}.form-group label{display:block;font-weight:700;font-size:13px;color:var(--navy);margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:11px;border:1px solid var(--border);border-radius:9px;outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold)}
+.booking-modal,.receipt-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2500;display:none;align-items:center;justify-content:center;padding:20px}
+.booking-modal.show,.receipt-modal.show{display:flex}
+.booking-form-container,.receipt-container{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:28px;position:relative}
+.modal-close,.receipt-close{position:absolute;right:14px;top:10px;border:0;background:transparent;font-size:28px;color:#555}
+.booking-form-header,.receipt-header{text-align:center;margin-bottom:22px}.modal-service-icon,.receipt-cross{font-size:34px}
+.booking-total{display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid var(--border);margin-top:10px}
+.submit-booking-btn{width:100%;border:0;background:var(--navy);color:#fff;padding:13px;border-radius:9px;font-weight:700}
+#hero{position:relative;min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;text-align:center;background:
+radial-gradient(circle at 50% 30%,rgba(199,163,75,.55),transparent 28%),linear-gradient(135deg,#071c36,#174477 55%,#0d2b52)}
+#hero .hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.22)}
+#hero .hero-content{position:relative;z-index:2;width:min(900px,90%);color:#fff}
+.hero-title{font-family:Georgia,serif;font-size:clamp(2.4rem,6vw,4.5rem);line-height:1.15;margin:0 0 18px}
+.hero-subtitle{max-width:750px;margin:0 auto 28px;line-height:1.8;font-size:1.05rem}
+.hero-cta{border:0;border-radius:40px;padding:14px 26px;background:var(--gold);color:#fff;font-weight:700}
+#header-trigger{display:none}
+.explore-page{background:#f8f6f2}.explore-page section{padding:70px 0}.container{width:min(1150px,92%);margin:auto}
+.section-title{text-align:center;font-family:Georgia,serif;font-size:2.4rem;margin:0 0 15px;color:var(--navy)}
+.section-sub{text-align:center;color:#666;margin:0 auto 45px;max-width:850px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
+.explore-card{background:#fff;padding:30px;border-radius:18px;box-shadow:var(--shadow);transition:.2s}.explore-card:hover{transform:translateY(-5px)}
+.explore-card h3{font-family:Georgia,serif;color:var(--navy)}.icon{font-size:2.4rem}
+.timeline{border-left:4px solid var(--gold);padding-left:28px;max-width:850px;margin:auto}.timeline-item{margin-bottom:35px}.timeline-item h4{color:var(--navy)}
+.quote{background:var(--navy);color:#fff;text-align:center;padding:70px 20px}.quote h2{font-family:Georgia,serif}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;text-align:center}.stat{background:#fff;padding:25px;border-radius:15px;box-shadow:var(--shadow)}.stat h2{color:var(--gold)}
+.prayer-box{background:#fff;border-radius:16px;padding:25px;margin:15px 0;box-shadow:var(--shadow)}
+@media(max-width:760px){
+  #navbar{padding:12px 4%}.nav-links{display:none;position:absolute;left:0;right:0;top:73px;background:#fff;padding:10px 4%;border-bottom:1px solid var(--border);flex-direction:column;align-items:stretch}
+  .nav-links.open{display:flex}#hamburger{display:block}.nav-links a{text-align:center}
+  .page-header{padding:50px 5% 30px}.page-content{width:92%}.booking-types{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:430px){.booking-types{grid-template-columns:1fr}.booking-form-container,.receipt-container{padding:20px}}
+
+
+
+/* RED INTERACTION + DARK RED FOOTER */
+:root{--click-red:#b91c1c;--click-red-dark:#7f1d1d;--footer-red:#641010;}
+.tab-btn.active,.tab-btn:hover{background:var(--click-red) !important;border-color:var(--click-red) !important;color:#fff !important;}
+.nav-links a:active,#hamburger:active,.btn:active,.booking-type-card:active{color:var(--click-red) !important;}
+.nav-links a.active{background:#fee2e2 !important;color:var(--click-red) !important;}
+.btn-primary:active{background:var(--click-red-dark) !important;}
+footer{background:var(--footer-red) !important;color:#fff;}
+</style>
+
+<style>
+/* FINAL RED THEME OVERRIDES */
+:root{
+  --root-red:#b91c1c;
+  --root-red-dark:#7f1d1d;
+  --root-red-light:#fecaca;
+}
+/* Buttons */
+button, .btn, .btn-primary, .submit-booking-btn, .hero-cta, .login-button{
+  background:var(--root-red) !important;
+  border-color:var(--root-red) !important;
+  color:#fff !important;
+}
+button:hover, .btn:hover, .btn-primary:hover, .submit-booking-btn:hover, .hero-cta:hover, .login-button:hover{
+  background:var(--root-red-dark) !important;
+  border-color:var(--root-red-dark) !important;
+}
+button:active, .btn:active, .btn-primary:active, .submit-booking-btn:active, .hero-cta:active, .login-button:active{
+  background:#641010 !important;
+}
+/* Boxes / cards / form fields */
+.card, .booking-type-card, .modal, .login-card, .form-group input, .form-group textarea, .form-group select, .search-input, .input-group input, .tab-btn{
+  border-color:var(--root-red) !important;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus, .search-input:focus, .input-group input:focus{
+  border-color:var(--root-red) !important;
+  box-shadow:0 0 0 3px rgba(185,28,28,.14) !important;
+}
+.tab-btn.active, .tab-btn:hover{
+  background:var(--root-red) !important;
+  border-color:var(--root-red) !important;
+  color:#fff !important;
+}
+footer{background:#641010 !important;color:#fff !important;}
+</style>
+<!-- FINAL RED THEME OVERRIDES -->
+
+</head>
+
+<body class="explore-page">
+
+<section class="hero">
+    <div>
+        <h1>Explore Our Parish</h1>
+
+        <p>
+            Welcome to the National Shrine and Parish of the Divine Mercy—
+            a place where faith is nourished, hope is restored,
+            and God's infinite mercy embraces everyone.
+        </p>
+        </a>
+    </div>
+</section>
+
+<section>
+
+<div class="container">
+
+<h2 class="section-title">Our Mission</h2>
+
+<p class="section-sub">
+To proclaim the Gospel, celebrate the Sacraments,
+serve our community with compassion,
+and bring every soul closer to Christ through Divine Mercy.
+</p>
+
+<div class="grid">
+
+<div class="card">
+<div class="icon">🙏</div>
+<h3>Prayer</h3>
+
+<p>
+Daily Masses, Eucharistic Adoration,
+the Divine Mercy Chaplet,
+and moments of silent prayer strengthen
+our relationship with Christ.
+</p>
+</div>
+
+<div class="card">
+<div class="icon">❤️</div>
+<h3>Compassion</h3>
+
+<p>
+We strive to become instruments
+of God's mercy by serving those in need,
+welcoming every family,
+and building a loving parish community.
+</p>
+</div>
+
+<div class="card">
+<div class="icon">⛪</div>
+<h3>Faith Formation</h3>
+
+<p>
+From children to adults,
+our parish offers catechism,
+Bible reflections,
+and spiritual formation programs.
+</p>
+</div>
+<section class="divine-mercy-prayers">
+
+    <h2>Divine Mercy Prayers</h2>
+
+    <div class="prayer-box">
+        <h3>Prayer to St. Faustina</h3>
+        <p>
+            Saint Faustina Kowalska, faithful apostle of Divine Mercy,
+            pray for us that we may trust completely in Jesus and become
+            instruments of His mercy to others. Help us to grow in faith,
+            hope, and love each day. Amen.
+        </p>
+    </div>
+
+    <div class="prayer-box">
+        <h3>The 3 O'Clock Prayer</h3>
+        <p>
+            You expired, Jesus, but the source of life gushed forth for souls,
+            and the ocean of mercy opened up for the whole world.
+        </p>
+
+        <p>
+            O Fount of Life, unfathomable Divine Mercy,
+            envelop the whole world and empty Yourself out upon us.
+        </p>
+
+        <p>
+            O Blood and Water, which gushed forth from the Heart of Jesus
+            as a fountain of mercy for us,
+            <strong>I trust in You.</strong>
+        </p>
+    </div>
+
+</section>
+</div>
+
+</div>
+
+</section>
+
+<section style="background:#fff;">
+
+<div class="container">
+
+<h2 class="section-title">Parish Journey</h2>
+
+<div class="timeline">
+
+<div class="timeline-item">
+<h4>Foundation</h4>
+<p>
+Our parish began as a small community
+united in faith,
+growing through prayer,
+service,
+and devotion to the Divine Mercy.
+</p>
+</div>
+
+<div class="timeline-item">
+<h4>Growth</h4>
+<p>
+With God's grace,
+our ministries expanded,
+bringing together families,
+youth,
+and volunteers dedicated to serving Christ.
+</p>
+</div>
+
+<div class="timeline-item">
+<h4>Today</h4>
+<p>
+Today,
+our parish continues to be a spiritual home,
+offering worship,
+education,
+charitable outreach,
+and hope to everyone.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<div class="container">
+
+<h2 class="section-title">Our Ministries</h2>
+
+<div class="grid">
+
+<div class="card">
+<div class="icon">🎵</div>
+<h3>Choir Ministry</h3>
+<p>Leading the congregation in sacred music during liturgical celebrations.</p>
+</div>
+
+<div class="card">
+<div class="icon">📖</div>
+<h3>Lectors</h3>
+<p>Proclaiming God's Word with reverence and faith.</p>
+</div>
+
+<div class="card">
+<div class="icon">🕊️</div>
+<h3>Extraordinary Ministers</h3>
+<p>Serving Holy Communion to the faithful and the sick.</p>
+</div>
+
+<div class="card">
+<div class="icon">👨‍👩‍👧‍👦</div>
+<h3>Family Ministry</h3>
+<p>Supporting Christian family life through fellowship and formation.</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="quote">
+
+<h2>"Jesus, I Trust in You."</h2>
+
+<p style="max-width:700px;margin:auto;line-height:1.8;">
+May every visitor who enters this parish
+encounter the boundless love of Christ,
+grow in faith,
+and become a witness of Divine Mercy
+to the world.
+</p>
+
+</section>
+
+<footer>
+
+<p><strong>The National Shrine and Parish of The Divine Mercy</strong></p>
+
+<p>Spreading God's Infinite Mercy to All Souls.</p>
+    <a href="index.html" class="home-btn">🏠</a>
+
+</footer>
+
+<script>
+const STORAGE_KEY = "dm_church_data";
+let state = { announcements: [], schedule: [], posts: [], bookings: [] };
+let scheduleFilter = "all";
+let postFilter = "all";
+let bookingFilter = "all";
+let announcementSearch = "";
+
+function seedData() {
+  const now = new Date();
+  const date = (days) => {
+    const value = new Date(now);
+    value.setDate(value.getDate() + days);
+    return value.toISOString().slice(0, 10);
+  };
+  const dateTime = (days) => {
+    const value = new Date(now);
+    value.setDate(value.getDate() + days);
+    return value.toISOString().slice(0, 16);
+  };
+  state.announcements = [
+    { id: 1, title: "Divine Mercy Sunday Celebration", content: "Join us for a special celebration of Divine Mercy Sunday. The Chaplet of Divine Mercy will be prayed at 3:00 PM, followed by Benediction and special prayers for all the faithful. All are welcome.", priority: "urgent", expiresAt: date(7), createdAt: now.toISOString() },
+    { id: 2, title: "Parish Feast Day — First Friday Devotion", content: "Every First Friday of the month, we celebrate a special Mass in honor of the Sacred Heart of Jesus at 7:00 AM. Confessions are available from 6:00 AM.", priority: "high", expiresAt: null, createdAt: now.toISOString() },
+    { id: 3, title: "Religious Education Classes Resume", content: "Our parish Religious Education program resumes this coming Saturday. Classes are held for children aged 6–16. Please register at the parish office for more information.", priority: "normal", expiresAt: null, createdAt: now.toISOString() },
+  ];
+  state.schedule = [
+    { id: 1, title: "Sunday Mass", eventType: "mass", description: "Regular Sunday Parish Mass. Mass times: 7:00 AM, 9:00 AM, and 6:00 PM.", startDateTime: dateTime(3), endDateTime: "", location: "Main Church", celebrant: "Fr. Emmanuel Santos", isRecurring: true, createdAt: now.toISOString() },
+    { id: 2, title: "Chaplet of Divine Mercy", eventType: "novena", description: "The Chaplet of Divine Mercy is prayed every day at 3:00 PM — the Hour of Mercy.", startDateTime: dateTime(1), endDateTime: "", location: "Chapel of Adoration", celebrant: "", isRecurring: true, createdAt: now.toISOString() },
+    { id: 3, title: "Sacrament of Confession", eventType: "confession", description: "The Sacrament of Reconciliation is available every Saturday from 6:00 AM to 8:00 AM.", startDateTime: dateTime(4), endDateTime: "", location: "Confessional", celebrant: "Fr. Emmanuel Santos", isRecurring: true, createdAt: now.toISOString() },
+    { id: 4, title: "First Friday Mass & Sacred Heart Devotion", eventType: "special_mass", description: "Special Mass in honor of the Sacred Heart of Jesus, followed by exposition and adoration.", startDateTime: dateTime(5), endDateTime: "", location: "Main Church", celebrant: "Fr. Emmanuel Santos", isRecurring: true, createdAt: now.toISOString() },
+  ];
+  state.posts = [
+    { id: 1, content: "\"Jesus, I trust in You.\" — Let us hold fast to these words of St. Faustina as we enter this week with hearts open to God’s infinite mercy.", status: "published", platforms: ["facebook", "instagram"], scheduledAt: "", publishedAt: now.toISOString(), createdAt: now.toISOString() },
+    { id: 2, content: "Join us for the Chaplet of Divine Mercy at 3:00 PM today. All are welcome in the chapel.", status: "scheduled", platforms: ["facebook", "twitter"], scheduledAt: dateTime(2), publishedAt: "", createdAt: now.toISOString() },
+    { id: 3, content: "Parish family, please remember our Religious Education students in your prayers.", status: "draft", platforms: ["instagram"], scheduledAt: "", publishedAt: "", createdAt: now.toISOString() },
+  ];
+  state.bookings = [
+    { id: 1, type: "baptism", subject: "Baby Gabriela Santos", preferredDate: date(14), alternateDate: date(21), notes: "Family would prefer a Sunday morning.", status: "pending", adminNotes: "", createdAt: now.toISOString() },
+    { id: 2, type: "mass_request", subject: "Thanksgiving for healing", preferredDate: date(5), alternateDate: "", notes: "Please include the family intention.", status: "confirmed", adminNotes: "Confirmed for the 7:00 AM Mass.", createdAt: now.toISOString() },
+    { id: 3, type: "wedding", subject: "Miguel & Elena", preferredDate: date(45), alternateDate: date(52), notes: "Initial consultation requested.", status: "completed", adminNotes: "Consultation completed.", createdAt: now.toISOString() },
+  ];
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = JSON.parse(raw);
+    else {
+      seedData();
+      save();
+    }
+  } catch {
+    seedData();
+  }
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function nextId(items) { return items.length ? Math.max(...items.map((item) => Number(item.id))) + 1 : 1; }
+function esc(value) {
+  return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function formatDate(value) {
+  return value ? new Date(value).toLocaleDateString("en-PH", { year: "numeric", month: "short", day: "numeric" }) : "—";
+}
+function formatDateTime(value) {
+  return value ? new Date(value).toLocaleDateString("en-PH", { weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+}
+function badge(text, className) { return `<span class="badge badge-${className}">${text}</span>`; }
+function statusBadge(status) { return badge(status.charAt(0).toUpperCase() + status.slice(1).replace("_", " "), status); }
+function priorityBadge(priority) {
+  const labels = { urgent: "🔴 Urgent", high: "🟡 High", normal: "🔵 Normal", low: "⚪ Low" };
+  return badge(labels[priority] || priority, priority);
+}
+function eventBadge(type) {
+  const labels = { mass: "✝ Mass", event: "📆 Event", special_mass: "⭐ Special Mass", novena: "📿 Novena", confession: "🕊️ Confession", other: "Other" };
+  return badge(labels[type] || type, type);
+}
+function bookingTypeBadge(type) {
+  const labels = { baptism: "💧 Baptism", burial: "🕊️ Burial", wedding: "💍 Wedding", thanksgiving_mass: "🙏 Thanksgiving Mass", mass_request: "📜 Mass Request", souls_mass: "⭐ Souls Mass", other: "Other" };
+  return badge(labels[type] || type, "mass");
+}
+function platformBadges(platforms) {
+  const icons = { facebook: "📘", instagram: "📷", twitter: "🐦" };
+  return (platforms || []).map((platform) => badge(`${icons[platform] || ""} ${platform.charAt(0).toUpperCase()}${platform.slice(1)}`, platform)).join("");
+}
+function toggleMenu() { document.querySelector("#nav-links").classList.toggle("open"); }
+function toast(message) {
+  let container = document.querySelector("#toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toast-container";
+    document.body.append(container);
+  }
+  const item = document.createElement("div");
+  item.className = "toast";
+  item.textContent = message;
+  container.append(item);
+  setTimeout(() => item.remove(), 3200);
+}
+function closeModal() {
+  const modal = document.querySelector(".modal-overlay.open");
+  if (modal) modal.remove();
+  document.body.style.overflow = "";
+}
+function openModal(title, body, saveLabel = "Save") {
+  closeModal();
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay open";
+  overlay.innerHTML = `<div class="modal"><div class="modal-header"><h2>${title}</h2><button class="modal-close" onclick="closeModal()">✕</button></div><div class="modal-body">${body}</div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" id="modal-save">${saveLabel}</button></div></div>`;
+  overlay.addEventListener("click", (event) => { if (event.target === overlay) closeModal(); });
+  document.body.append(overlay);
+  document.body.style.overflow = "hidden";
+  return overlay;
+}
+function formInput(label, id, value = "", type = "text", placeholder = "") {
+  return `<div class="form-group"><label>${label}</label><input class="form-control" id="${id}" type="${type}" value="${esc(value)}" placeholder="${placeholder}"></div>`;
+}
+function formTextarea(label, id, value = "", placeholder = "") {
+  return `<div class="form-group"><label>${label}</label><textarea class="form-control" id="${id}" placeholder="${placeholder}">${esc(value)}</textarea></div>`;
+}
+function formSelect(label, id, options, selected) {
+  const choices = options.map(([value, label]) => `<option value="${value}" ${value === selected ? "selected" : ""}>${label}</option>`).join("");
+  return `<div class="form-group"><label>${label}</label><select class="form-control" id="${id}">${choices}</select></div>`;
+}
+
+function openAnnouncementModal(id) {
+  const item = state.announcements.find((entry) => entry.id === id) || {};
+  const body = [
+    formInput("Title *", "ann-title", item.title || "", "text", "Announcement title"),
+    formTextarea("Content *", "ann-content", item.content || "", "Announcement message…"),
+    `<div class="form-row">${formSelect("Priority", "ann-priority", [["normal", "Normal"], ["low", "Low"], ["high", "High"], ["urgent", "Urgent"]], item.priority || "normal")}${formInput("Expires At (optional)", "ann-expires", item.expiresAt || "", "date")}</div>`,
+  ].join("");
+  const modal = openModal(id ? "Edit Announcement" : "New Announcement", body);
+  modal.querySelector("#modal-save").onclick = () => {
+    const title = modal.querySelector("#ann-title").value.trim();
+    const content = modal.querySelector("#ann-content").value.trim();
+    if (!title || !content) return toast("Please fill in title and content.");
+    const data = { title, content, priority: modal.querySelector("#ann-priority").value, expiresAt: modal.querySelector("#ann-expires").value || null };
+    if (id) Object.assign(item, data);
+    else state.announcements.unshift({ id: nextId(state.announcements), ...data, createdAt: new Date().toISOString() });
+    save(); closeModal(); renderAnnouncements(); toast(id ? "Announcement updated." : "Announcement created.");
+  };
+}
+function renderAnnouncements() {
+  const list = document.querySelector("#announcements-list");
+  if (!list) return;
+  const query = announcementSearch.toLowerCase();
+  const items = state.announcements.filter((item) => !query || item.title.toLowerCase().includes(query) || item.content.toLowerCase().includes(query));
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📢</div><h3>No announcements found</h3><p>Click “New Announcement” to create one.</p></div>`;
+    return;
+  }
+  list.innerHTML = items.map((item) => `<div class="card"><div class="card-body"><div class="meta-row">${priorityBadge(item.priority)}<span class="meta-item">📅 ${formatDate(item.createdAt)}</span>${item.expiresAt ? `<span class="meta-item">⏳ Expires ${formatDate(item.expiresAt)}</span>` : ""}</div><h3 style="font-size:1.1rem;color:var(--navy);margin-bottom:.5rem">${esc(item.title)}</h3><p style="font-size:.88rem;color:var(--muted);line-height:1.65">${esc(item.content)}</p><div class="card-actions"><button class="btn btn-secondary btn-sm" onclick="openAnnouncementModal(${item.id})">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteAnnouncement(${item.id})">🗑️ Delete</button></div></div></div>`).join("");
+}
+function deleteAnnouncement(id) {
+  if (!confirm("Delete this announcement?")) return;
+  state.announcements = state.announcements.filter((item) => item.id !== id);
+  save(); renderAnnouncements(); toast("Announcement deleted.");
+}
+
+function openScheduleModal(id) {
+  const item = state.schedule.find((entry) => entry.id === id) || {};
+  const body = [
+    formInput("Title *", "sch-title", item.title || "", "text", "Event title"),
+    formTextarea("Description", "sch-description", item.description || "", "Event description"),
+    `<div class="form-row">${formSelect("Event Type", "sch-type", [["mass", "Mass"], ["event", "Event"], ["special_mass", "Special Mass"], ["novena", "Novena"], ["confession", "Confession"], ["other", "Other"]], item.eventType || "event")}${formInput("Start Date & Time *", "sch-start", item.startDateTime || "", "datetime-local")}</div>`,
+    `<div class="form-row">${formInput("End Date & Time", "sch-end", item.endDateTime || "", "datetime-local")}${formInput("Location", "sch-location", item.location || "", "text", "Main Church")}</div>`,
+    formInput("Celebrant", "sch-celebrant", item.celebrant || "", "text", "Priest or leader"),
+  ].join("");
+  const modal = openModal(id ? "Edit Schedule Event" : "Add Schedule Event", body);
+  modal.querySelector("#modal-save").onclick = () => {
+    const title = modal.querySelector("#sch-title").value.trim();
+    const startDateTime = modal.querySelector("#sch-start").value;
+    if (!title || !startDateTime) return toast("Please fill in the title and start date.");
+    const data = { title, description: modal.querySelector("#sch-description").value.trim(), eventType: modal.querySelector("#sch-type").value, startDateTime, endDateTime: modal.querySelector("#sch-end").value, location: modal.querySelector("#sch-location").value.trim(), celebrant: modal.querySelector("#sch-celebrant").value.trim(), isRecurring: false };
+    if (id) Object.assign(item, data);
+    else state.schedule.push({ id: nextId(state.schedule), ...data, createdAt: new Date().toISOString() });
+    save(); closeModal(); renderSchedule(); toast(id ? "Event updated." : "Event added.");
+  };
+}
+function switchScheduleTab(filter) {
+  scheduleFilter = filter;
+  document.querySelectorAll("#schedule-tabs .tab-btn").forEach((button) => button.classList.toggle("active", button.dataset.filter === filter));
+  renderSchedule();
+}
+function renderSchedule() {
+  const list = document.querySelector("#schedule-list");
+  if (!list) return;
+  let items = [...state.schedule].sort((a, b) => a.startDateTime.localeCompare(b.startDateTime));
+  const allowed = { mass: ["mass", "special_mass"], event: ["event", "other"], novena: ["novena", "confession"] };
+  if (scheduleFilter !== "all") items = items.filter((item) => (allowed[scheduleFilter] || [scheduleFilter]).includes(item.eventType));
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📅</div><h3>No events found</h3><p>Click “Add Event” to create one.</p></div>`;
+    return;
+  }
+  list.innerHTML = items.map((item) => `<div class="card"><div class="card-body"><div class="meta-row">${eventBadge(item.eventType)}<span class="meta-item">📅 ${formatDateTime(item.startDateTime)}</span>${item.isRecurring ? "<span class=\"meta-item\">↻ Recurring</span>" : ""}</div><h3 style="font-size:1.1rem;color:var(--navy);margin-bottom:.5rem">${esc(item.title)}</h3><p style="font-size:.88rem;color:var(--muted);line-height:1.65">${esc(item.description)}</p><div class="meta-row" style="margin-top:.8rem"><span class="meta-item">📍 ${esc(item.location || "—")}</span>${item.celebrant ? `<span class="meta-item">✝ ${esc(item.celebrant)}</span>` : ""}</div><div class="card-actions"><button class="btn btn-secondary btn-sm" onclick="openScheduleModal(${item.id})">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteSchedule(${item.id})">🗑️ Delete</button></div></div></div>`).join("");
+}
+function deleteSchedule(id) {
+  if (!confirm("Delete this event?")) return;
+  state.schedule = state.schedule.filter((item) => item.id !== id);
+  save(); renderSchedule(); toast("Event deleted.");
+}
+
+function openPostModal(id) {
+  const item = state.posts.find((entry) => entry.id === id) || {};
+  const checks = ["facebook", "instagram", "twitter"].map((platform) => `<label style="font-weight:400"><input type="checkbox" class="platform-check" value="${platform}" ${(item.platforms || []).includes(platform) ? "checked" : ""}> ${platform.charAt(0).toUpperCase()}${platform.slice(1)}</label>`).join("");
+  const body = [formTextarea("Post Content *", "post-content", item.content || "", "Write your parish message…"), formSelect("Status", "post-status", [["draft", "Draft"], ["scheduled", "Scheduled"], ["published", "Published"]], item.status || "draft"), `<div class="form-group"><label>Platforms</label><div style="display:flex;gap:1rem;flex-wrap:wrap">${checks}</div></div>`, formInput("Scheduled At (optional)", "post-scheduled", item.scheduledAt || "", "datetime-local")].join("");
+  const modal = openModal(id ? "Edit Parish Post" : "New Parish Post", body);
+  modal.querySelector("#modal-save").onclick = () => {
+    const content = modal.querySelector("#post-content").value.trim();
+    const platforms = [...modal.querySelectorAll(".platform-check:checked")].map((input) => input.value);
+    if (!content || !platforms.length) return toast("Add content and select at least one platform.");
+    const status = modal.querySelector("#post-status").value;
+    const data = { content, platforms, status, scheduledAt: modal.querySelector("#post-scheduled").value, publishedAt: status === "published" ? (item.publishedAt || new Date().toISOString()) : "" };
+    if (id) Object.assign(item, data);
+    else state.posts.unshift({ id: nextId(state.posts), ...data, createdAt: new Date().toISOString() });
+    save(); closeModal(); renderPosts(); toast(id ? "Post updated." : "Post created.");
+  };
+}
+function switchPostTab(filter) {
+  postFilter = filter;
+  document.querySelectorAll("#post-tabs .tab-btn").forEach((button) => button.classList.toggle("active", button.dataset.filter === filter));
+  renderPosts();
+}
+function renderPosts() {
+  const list = document.querySelector("#posts-list");
+  if (!list) return;
+  const items = state.posts.filter((item) => postFilter === "all" || item.status === postFilter);
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📣</div><h3>No posts found</h3><p>Click “New Post” to create one.</p></div>`;
+    return;
+  }
+  list.innerHTML = items.map((item) => `<div class="card"><div class="card-body"><div class="meta-row">${statusBadge(item.status)}<div class="platforms-row">${platformBadges(item.platforms)}</div></div><p class="post-content-text">${esc(item.content)}</p><div class="meta-row" style="margin-top:1rem">${item.scheduledAt ? `<span class="meta-item">🗓 Scheduled ${formatDateTime(item.scheduledAt)}</span>` : ""}${item.publishedAt ? `<span class="meta-item">✓ Published ${formatDateTime(item.publishedAt)}</span>` : `<span class="meta-item">📅 Created ${formatDate(item.createdAt)}</span>`}</div><div class="card-actions"><button class="btn btn-secondary btn-sm" onclick="openPostModal(${item.id})">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deletePost(${item.id})">🗑️ Delete</button></div></div></div>`).join("");
+}
+function deletePost(id) {
+  if (!confirm("Delete this post?")) return;
+  state.posts = state.posts.filter((item) => item.id !== id);
+  save(); renderPosts(); toast("Post deleted.");
+}
+
+function openBookingModal(type, id) {
+  const item = state.bookings.find((entry) => entry.id === id) || {};
+  const selectedType = type || item.type || "baptism";
+  const body = [
+    formSelect("Service Type", "book-type", [["baptism", "Baptism"], ["burial", "Burial"], ["wedding", "Wedding"], ["thanksgiving_mass", "Thanksgiving Mass"], ["mass_request", "Mass Request"], ["souls_mass", "Souls Mass"], ["other", "Other"]], selectedType),
+    formInput("Subject / Name of Person (optional)", "book-subject", item.subject || "", "text", "e.g., Baby’s name or intention"),
+    `<div class="form-row">${formInput("Preferred Date *", "book-date", item.preferredDate || "", "date")}${formInput("Alternate Date", "book-alt-date", item.alternateDate || "", "date")}</div>`,
+    formTextarea("Notes / Special Requests", "book-notes", item.notes || "", "Any additional information…"),
+    id ? `<hr class="divider">${formSelect("Update Status", "book-status", [["pending", "Pending"], ["confirmed", "Confirmed"], ["completed", "Completed"], ["cancelled", "Cancelled"]], item.status || "pending")}${formInput("Admin Notes", "book-admin-notes", item.adminNotes || "", "text", "Internal notes…")}` : "",
+  ].join("");
+  const modal = openModal(id ? "Edit Booking Request" : "Submit Booking Request", body, "Submit Request");
+  modal.querySelector("#modal-save").onclick = () => {
+    const preferredDate = modal.querySelector("#book-date").value;
+    if (!preferredDate) return toast("Please choose a preferred date.");
+    const data = { type: modal.querySelector("#book-type").value, subject: modal.querySelector("#book-subject").value.trim(), preferredDate, alternateDate: modal.querySelector("#book-alt-date").value, notes: modal.querySelector("#book-notes").value.trim(), status: id ? modal.querySelector("#book-status").value : "pending", adminNotes: id ? modal.querySelector("#book-admin-notes").value.trim() : "" };
+    if (id) Object.assign(item, data);
+    else state.bookings.unshift({ id: nextId(state.bookings), ...data, createdAt: new Date().toISOString() });
+    save(); closeModal(); renderBookings(); toast(id ? "Booking updated." : "Booking request submitted.");
+  };
+}
+function switchBookingTab(filter) {
+  bookingFilter = filter;
+  document.querySelectorAll("#booking-tabs .tab-btn").forEach((button) => button.classList.toggle("active", button.dataset.filter === filter));
+  renderBookings();
+}
+function renderBookings() {
+  const list = document.querySelector("#bookings-list");
+  if (!list) return;
+  const items = state.bookings.filter((item) => bookingFilter === "all" || item.status === bookingFilter);
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🙏</div><h3>No booking requests</h3><p>Select a service above to submit a request.</p></div>`;
+    return;
+  }
+  list.innerHTML = items.map((item) => `<div class="card"><div class="card-body"><div class="meta-row">${bookingTypeBadge(item.type)}${statusBadge(item.status)}<span class="meta-item">📅 Requested ${formatDate(item.createdAt)}</span></div><h3 style="font-size:1.1rem;color:var(--navy)">${esc(item.subject || "No subject")}</h3><p class="booking-subject">Preferred date: ${formatDate(item.preferredDate)}${item.alternateDate ? ` · Alternate: ${formatDate(item.alternateDate)}` : ""}</p>${item.notes ? `<div class="booking-notes">${esc(item.notes)}</div>` : ""}<div class="card-actions"><button class="btn btn-secondary btn-sm" onclick="openBookingModal(null, ${item.id})">✏️ Manage</button><button class="btn btn-danger btn-sm" onclick="deleteBooking(${item.id})">🗑️ Delete</button></div></div></div>`).join("");
+}
+function deleteBooking(id) {
+  if (!confirm("Delete this booking?")) return;
+  state.bookings = state.bookings.filter((item) => item.id !== id);
+  save(); renderBookings(); toast("Booking deleted.");
+}
+
+load();
+const currentPage = document.body.dataset.page;
+if (currentPage === "announcements") {
+  const search = document.querySelector("#ann-search");
+  if (search) search.addEventListener("input", (event) => { announcementSearch = event.target.value; renderAnnouncements(); });
+  renderAnnouncements();
+}
+if (currentPage === "schedule") renderSchedule();
+if (currentPage === "posts") renderPosts();
+if (currentPage === "bookings") renderBookings();
+
+function toggleHeader() {
+    const navbar = document.getElementById("navbar");
+    const trigger = document.getElementById("header-trigger");
+
+    navbar.classList.toggle("header-visible");
+
+    if (navbar.classList.contains("header-visible")) {
+        trigger.innerHTML = "✕";
+        trigger.setAttribute("aria-label", "Hide navigation");
+    } else {
+        trigger.innerHTML = "☰";
+        trigger.setAttribute("aria-label", "Show navigation");
+    }
+}
+
+/* =========================================
+   DIVINE MERCY BOOKING + RECEIPT SYSTEM
+   BOOKING + MANAGE + DELETE + RECEIPT
+   ========================================= */
+
+const serviceData = {
+
+    baptism: {
+        name: "Baptism",
+        icon: "💧",
+        amount: 500
+    },
+
+    burial: {
+        name: "Burial",
+        icon: "🕊️",
+        amount: 1000
+    },
+
+    wedding: {
+        name: "Wedding",
+        icon: "💍",
+        amount: 2500
+    },
+
+    thanksgiving_mass: {
+        name: "Thanksgiving Mass",
+        icon: "🙏",
+        amount: 300
+    },
+
+    mass_request: {
+        name: "Mass Request",
+        icon: "📜",
+        amount: 300
+    },
+
+    souls_mass: {
+        name: "Souls Mass",
+        icon: "⭐",
+        amount: 300
+    }
+
+};
+
+
+/* =========================================
+   GLOBAL EDITING STATE
+   ========================================= */
+
+let editingBookingId = null;
+
+
+/* =========================================
+   OPEN BOOKING FORM
+   ========================================= */
+
+function openBookingModal(serviceType, bookingId = null) {
+
+    const modal =
+        document.getElementById("booking-modal");
+
+    const form =
+        document.getElementById("booking-form");
+
+    const serviceInput =
+        document.getElementById("booking-service");
+
+    const serviceName =
+        document.getElementById("modal-service-name");
+
+    const serviceIcon =
+        document.getElementById("modal-service-icon");
+
+    const amount =
+        document.getElementById("booking-amount");
+
+    const dateInput =
+        document.getElementById("booking-date");
+
+
+    if (!modal || !form) {
+        console.error(
+            "Booking modal/form not found."
+        );
+        return;
+    }
+
+
+    /* =========================================
+       MANAGE / EDIT EXISTING BOOKING
+       ========================================= */
+
+    if (bookingId !== null && bookingId !== undefined) {
+
+        const booking =
+            state.bookings.find(
+                b => String(b.id) === String(bookingId)
+            );
+
+
+        if (!booking) {
+
+            toast(
+                "Booking could not be found."
+            );
+
+            return;
+
+        }
+
+
+        editingBookingId = booking.id;
+
+
+        /* Fill existing data */
+
+        const selectedService =
+            serviceData[
+                booking.serviceType ||
+                booking.type
+            ];
+
+
+        if (serviceInput) {
+
+            serviceInput.value =
+                booking.serviceType ||
+                booking.type ||
+                "";
+
+        }
+
+
+        if (serviceName) {
+
+            serviceName.textContent =
+                booking.service ||
+                selectedService?.name ||
+                "Service";
+
+        }
+
+
+        if (serviceIcon) {
+
+            serviceIcon.textContent =
+                booking.icon ||
+                selectedService?.icon ||
+                "📋";
+
+        }
+
+
+        if (amount) {
+
+            amount.textContent =
+                formatBookingCurrency(
+                    booking.amount ||
+                    selectedService?.amount ||
+                    0
+                );
+
+        }
+
+
+        /* Fill name */
+
+        const nameInput =
+            document.getElementById(
+                "booking-name"
+            );
+
+        if (nameInput) {
+
+            nameInput.value =
+                booking.name ||
+                booking.subject ||
+                "";
+
+        }
+
+
+        /* Fill date */
+
+        if (dateInput) {
+
+            dateInput.value =
+                booking.date ||
+                booking.preferredDate ||
+                "";
+
+        }
+
+
+        /* Fill contact */
+
+        const contactInput =
+            document.getElementById(
+                "booking-contact"
+            );
+
+        if (contactInput) {
+
+            contactInput.value =
+                booking.contact ||
+                "";
+
+        }
+
+
+        /* Fill email */
+
+        const emailInput =
+            document.getElementById(
+                "booking-email"
+            );
+
+        if (emailInput) {
+
+            emailInput.value =
+                booking.email ||
+                "";
+
+        }
+
+
+        /* Fill notes */
+
+        const notesInput =
+            document.getElementById(
+                "booking-notes"
+            );
+
+        if (notesInput) {
+
+            notesInput.value =
+                booking.notes ||
+                "";
+
+        }
+
+
+    } else {
+
+        /* =========================================
+           NEW BOOKING
+           ========================================= */
+
+        editingBookingId = null;
+
+        form.reset();
+
+
+        const service =
+            serviceData[serviceType];
+
+
+        if (!service) {
+
+            console.error(
+                "Service not found:",
+                serviceType
+            );
+
+            return;
+
+        }
+
+
+        if (serviceInput) {
+
+            serviceInput.value =
+                serviceType;
+
+        }
+
+
+        if (serviceName) {
+
+            serviceName.textContent =
+                service.name;
+
+        }
+
+
+        if (serviceIcon) {
+
+            serviceIcon.textContent =
+                service.icon;
+
+        }
+
+
+        if (amount) {
+
+            amount.textContent =
+                formatBookingCurrency(
+                    service.amount
+                );
+
+        }
+
+    }
+
+
+    /* =========================================
+       PREVENT PREVIOUS DATES
+       ========================================= */
+
+    if (dateInput) {
+
+        const today =
+            new Date();
+
+        const year =
+            today.getFullYear();
+
+        const month =
+            String(
+                today.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                today.getDate()
+            ).padStart(2, "0");
+
+
+        dateInput.min =
+            `${year}-${month}-${day}`;
+
+    }
+
+
+    /* =========================================
+       SHOW MODAL
+       ========================================= */
+
+    modal.classList.add("show");
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================
+   MANAGE BOOKING
+   ========================================= */
+
+function manageBooking(bookingId) {
+
+    if (
+        bookingId === null ||
+        bookingId === undefined
+    ) {
+
+        toast(
+            "Invalid booking."
+        );
+
+        return;
+
+    }
+
+
+    const booking =
+        state.bookings.find(
+            b => String(b.id) === String(bookingId)
+        );
+
+
+    if (!booking) {
+
+        toast(
+            "Booking not found."
+        );
+
+        return;
+
+    }
+
+
+    openBookingModal(
+        booking.serviceType ||
+        booking.type,
+        booking.id
+    );
+
+}
+
+
+/* =========================================
+   DELETE BOOKING
+   ========================================= */
+
+function deleteBooking(bookingId) {
+
+    if (
+        bookingId === null ||
+        bookingId === undefined
+    ) {
+
+        toast(
+            "Invalid booking."
+        );
+
+        return;
+
+    }
+
+
+    const bookingIndex =
+        state.bookings.findIndex(
+            b =>
+                String(b.id) ===
+                String(bookingId)
+        );
+
+
+    if (bookingIndex === -1) {
+
+        toast(
+            "Booking not found."
+        );
+
+        return;
+
+    }
+
+
+    const booking =
+        state.bookings[bookingIndex];
+
+
+    const confirmed =
+        window.confirm(
+            "Are you sure you want to delete this booking?\n\n" +
+            "Reference: " +
+            (booking.reference || "N/A") +
+            "\nService: " +
+            (booking.service || "N/A")
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    /* Remove booking */
+
+    state.bookings.splice(
+        bookingIndex,
+        1
+    );
+
+
+    /* Save */
+
+    save();
+
+
+    /* Refresh booking request */
+
+    if (
+        typeof renderBookings ===
+        "function"
+    ) {
+
+        renderBookings();
+
+    }
+
+
+    /* Close modal if open */
+
+    closeBookingModal();
+
+
+    toast(
+        "Booking deleted successfully."
+    );
+
+}
+
+
+/* =========================================
+   SUBMIT BOOKING / UPDATE BOOKING
+   ========================================= */
+
+function submitBooking(event) {
+
+    if (event) {
+
+        event.preventDefault();
+
+    }
+
+
+    const serviceType =
+        document.getElementById(
+            "booking-service"
+        )?.value;
+
+
+    const service =
+        serviceData[serviceType];
+
+
+    if (!service) {
+
+        toast(
+            "Please select a booking service."
+        );
+
+        return false;
+
+    }
+
+
+    const name =
+        document.getElementById(
+            "booking-name"
+        )?.value.trim() || "";
+
+
+    const date =
+        document.getElementById(
+            "booking-date"
+        )?.value || "";
+
+
+    const contact =
+        document.getElementById(
+            "booking-contact"
+        )?.value.trim() || "";
+
+
+    const email =
+        document.getElementById(
+            "booking-email"
+        )?.value.trim() || "";
+
+
+    const notes =
+        document.getElementById(
+            "booking-notes"
+        )?.value.trim() || "";
+
+
+    /* =========================================
+       VALIDATION
+       ========================================= */
+
+    if (!name) {
+
+        toast(
+            "Please enter your full name."
+        );
+
+        return false;
+
+    }
+
+
+    if (!date) {
+
+        toast(
+            "Please select your preferred date."
+        );
+
+        return false;
+
+    }
+
+
+    if (!contact) {
+
+        toast(
+            "Please enter your contact number."
+        );
+
+        return false;
+
+    }
+
+
+    /* =========================================
+       MANAGE / UPDATE EXISTING BOOKING
+       ========================================= */
+
+    if (
+        editingBookingId !== null &&
+        editingBookingId !== undefined
+    ) {
+
+        const booking =
+            state.bookings.find(
+                b =>
+                    String(b.id) ===
+                    String(editingBookingId)
+            );
+
+
+        if (!booking) {
+
+            toast(
+                "Booking not found."
+            );
+
+            editingBookingId = null;
+
+            return false;
+
+        }
+
+
+        /* Preserve original booking information */
+
+        booking.type =
+            serviceType;
+
+        booking.serviceType =
+            serviceType;
+
+        booking.service =
+            service.name;
+
+        booking.icon =
+            service.icon;
+
+        booking.subject =
+            name;
+
+        booking.name =
+            name;
+
+        booking.preferredDate =
+            date;
+
+        booking.date =
+            date;
+
+        booking.contact =
+            contact;
+
+        booking.email =
+            email;
+
+        booking.notes =
+            notes;
+
+        booking.amount =
+            service.amount;
+
+
+        /*
+         * IMPORTANT:
+         * Do not change:
+         * id
+         * reference
+         * status
+         * createdAt
+         */
+
+
+        save();
+
+
+        if (
+            typeof renderBookings ===
+            "function"
+        ) {
+
+            renderBookings();
+
+        }
+
+
+        closeBookingModal();
+
+
+        toast(
+            "Booking updated successfully."
+        );
+
+
+        editingBookingId = null;
+
+
+        return false;
+
+    }
+
+
+    /* =========================================
+       CREATE NEW BOOKING
+       ========================================= */
+
+    const booking = {
+
+        id:
+            nextId(
+                state.bookings
+            ),
+
+        reference:
+            generateBookingReference(),
+
+        type:
+            serviceType,
+
+        service:
+            service.name,
+
+        serviceType:
+            serviceType,
+
+        icon:
+            service.icon,
+
+        subject:
+            name,
+
+        name:
+            name,
+
+        preferredDate:
+            date,
+
+        date:
+            date,
+
+        contact:
+            contact,
+
+        email:
+            email,
+
+        notes:
+            notes,
+
+        amount:
+            service.amount,
+
+        status:
+            "pending",
+
+        adminNotes:
+            "",
+
+        createdAt:
+            new Date().toISOString()
+
+    };
+
+
+    /* Add new booking */
+
+    state.bookings.unshift(
+        booking
+    );
+
+
+    /* Save */
+
+    save();
+
+
+    /* Reset edit state */
+
+    editingBookingId = null;
+
+
+    /* Close booking form */
+
+    closeBookingModal();
+
+
+    /* Refresh booking list */
+
+    if (
+        typeof renderBookings ===
+        "function"
+    ) {
+
+        renderBookings();
+
+    }
+
+
+    /* Notification */
+
+    toast(
+        "Booking request submitted successfully."
+    );
+
+
+    /* =========================================
+       SHOW TRANSACTION RECEIPT
+       ========================================= */
+
+    setTimeout(
+        function () {
+
+            showTransactionReceipt(
+                booking
+            );
+
+        },
+        100
+    );
+
+
+    return false;
+
+}
+
+
+/* =========================================
+   CLOSE BOOKING MODAL
+   ========================================= */
+
+function closeBookingModal() {
+
+    const modal =
+        document.getElementById(
+            "booking-modal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+
+    editingBookingId = null;
+
+}
+
+
+/* =========================================
+   GENERATE REFERENCE NUMBER
+   ========================================= */
+
+function generateBookingReference() {
+
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2, "0");
+
+    const random =
+        Math.floor(
+            100000 +
+            Math.random() * 900000
+        );
+
+
+    return (
+        "DM-" +
+        year +
+        month +
+        day +
+        "-" +
+        random
+    );
+
+}
+
+
+/* =========================================
+   SHOW TRANSACTION RECEIPT
+   ========================================= */
+
+function showTransactionReceipt(
+    booking
+) {
+
+    const modal =
+        document.getElementById(
+            "receipt-modal"
+        );
+
+
+    if (!modal) {
+
+        console.error(
+            "receipt-modal was not found."
+        );
+
+        return;
+
+    }
+
+
+    /* Reference */
+
+    const reference =
+        document.getElementById(
+            "receipt-reference"
+        );
+
+    if (reference) {
+
+        reference.textContent =
+            booking.reference;
+
+    }
+
+
+    /* Service */
+
+    const service =
+        document.getElementById(
+            "receipt-service"
+        );
+
+    if (service) {
+
+        service.textContent =
+            booking.service ||
+            serviceData[
+                booking.type
+            ]?.name ||
+            "Service";
+
+    }
+
+
+    /* Date */
+
+    const date =
+        document.getElementById(
+            "receipt-date"
+        );
+
+    if (date) {
+
+        date.textContent =
+            formatBookingDate(
+                booking.date ||
+                booking.preferredDate
+            );
+
+    }
+
+
+    /* Amount */
+
+    const amount =
+        document.getElementById(
+            "receipt-amount"
+        );
+
+    if (amount) {
+
+        amount.textContent =
+            formatBookingCurrency(
+                booking.amount
+            );
+
+    }
+
+
+    /* Status */
+
+    const status =
+        document.getElementById(
+            "receipt-status"
+        );
+
+    if (status) {
+
+        status.textContent =
+            booking.status
+                ? booking.status.charAt(0).toUpperCase() +
+                  booking.status.slice(1)
+                : "Pending";
+
+    }
+
+
+    /* Barcode number */
+
+    const barcodeNumber =
+        document.getElementById(
+            "barcode-number"
+        );
+
+    if (barcodeNumber) {
+
+        barcodeNumber.textContent =
+            booking.reference;
+
+    }
+
+
+    /* =========================================
+       GENERATE BARCODE
+       ========================================= */
+
+    const barcode =
+        document.getElementById(
+            "receipt-barcode"
+        );
+
+
+    if (barcode) {
+
+        barcode.innerHTML = "";
+
+
+        if (
+            typeof JsBarcode ===
+            "function"
+        ) {
+
+            JsBarcode(
+                barcode,
+                booking.reference,
+                {
+                    format: "CODE128",
+                    width: 2,
+                    height: 65,
+                    displayValue: false,
+                    margin: 5
+                }
+            );
+
+        } else {
+
+            console.error(
+                "JsBarcode library was not loaded."
+            );
+
+        }
+
+    }
+
+
+    /* =========================================
+       SHOW RECEIPT
+       ========================================= */
+
+    modal.classList.add(
+        "show"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================
+   CLOSE RECEIPT
+   ========================================= */
+
+function closeReceipt() {
+
+    const modal =
+        document.getElementById(
+            "receipt-modal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================
+   PRINT RECEIPT
+   ========================================= */
+
+function printReceipt() {
+
+    window.print();
+
+}
+
+
+/* =========================================
+   SHOW RECEIPT FOR EXISTING BOOKING
+   ========================================= */
+
+function viewBookingReceipt(bookingId) {
+
+    const booking =
+        state.bookings.find(
+            b =>
+                String(b.id) ===
+                String(bookingId)
+        );
+
+
+    if (!booking) {
+
+        toast(
+            "Booking not found."
+        );
+
+        return;
+
+    }
+
+
+    showTransactionReceipt(
+        booking
+    );
+
+}
+
+
+/* =========================================
+   BOOKING CURRENCY
+   ========================================= */
+
+function formatBookingCurrency(
+    amount
+) {
+
+    return new Intl.NumberFormat(
+        "en-PH",
+        {
+            style: "currency",
+            currency: "PHP"
+        }
+    ).format(
+        Number(amount) || 0
+    );
+
+}
+
+
+/* =========================================
+   BOOKING DATE
+   ========================================= */
+
+function formatBookingDate(
+    value
+) {
+
+    if (!value) {
+
+        return "—";
+
+    }
+
+
+    const parts =
+        value.split("-");
+
+
+    if (
+        parts.length !== 3
+    ) {
+
+        return value;
+
+    }
+
+
+    const date =
+        new Date(
+            Number(parts[0]),
+            Number(parts[1]) - 1,
+            Number(parts[2])
+        );
+
+
+    return date.toLocaleDateString(
+        "en-PH",
+        {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        }
+    );
+
+}
+
+
+/* =========================================
+   MODAL EVENTS
+   ========================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        /* =====================================
+           BOOKING FORM
+           ===================================== */
+
+        const form =
+            document.getElementById(
+                "booking-form"
+            );
+
+
+        if (form) {
+
+            /*
+             * Remove duplicate submit listener
+             * if this script is loaded more than once.
+             */
+
+            form.onsubmit =
+                submitBooking;
+
+        }
+
+
+        /* =====================================
+           BOOKING MODAL
+           ===================================== */
+
+        const bookingModal =
+            document.getElementById(
+                "booking-modal"
+            );
+
+
+        if (bookingModal) {
+
+            bookingModal.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target ===
+                        bookingModal
+                    ) {
+
+                        closeBookingModal();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================
+           RECEIPT MODAL
+           ===================================== */
+
+        const receiptModal =
+            document.getElementById(
+                "receipt-modal"
+            );
+
+
+        if (receiptModal) {
+
+            receiptModal.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target ===
+                        receiptModal
+                    ) {
+
+                        closeReceipt();
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   ESC KEY
+   ========================================= */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            closeBookingModal();
+
+            closeReceipt();
+
+        }
+
+    }
+);
+</script>
+</body>
+</html>
