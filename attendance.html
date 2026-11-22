@@ -9,7 +9,9 @@
 #attendance-form{border-top:1px solid var(--line);padding-top:8px}.field{margin:18px 0}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:8px;color:#344054}.field input,.field select{width:100%;padding:14px 15px;border:1px solid #d0d5dd;border-radius:12px;font-size:16px;background:#fff;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}.field input:focus,.field select:focus{border-color:var(--red);box-shadow:0 0 0 4px #a9152014}.field input::placeholder{color:#98a2b3}
 .btn{width:100%;border:0;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;padding:15px 18px;font-size:15px;font-weight:800;margin-top:12px;box-shadow:0 8px 18px #a9152028;cursor:pointer;transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-1px);box-shadow:0 11px 22px #a9152035}.btn:active{transform:translateY(0)}.note{font-size:12px;color:var(--muted);line-height:1.65;text-align:center;margin:20px 4px 0}.result{display:none;text-align:center;border-radius:14px;padding:20px;margin-top:20px;background:#ecfdf3;color:var(--green);line-height:1.65;border:1px solid #bbf7d0}.error{background:#fff1f2;color:#9f1239;border-color:#fecdd3}.hidden{display:none!important}
 @media(max-width:420px){body{padding:14px}.card{border-radius:20px;padding:23px 19px}.sub{margin-bottom:23px}}
-</style></head><body><main class="card"><div class="brand"><div class="cross">✝</div>DIVINE MERCY</div><div class="sub">SERVER ATTENDANCE CHECK-IN</div><h1>Attendance Form</h1><div class="event" id="event-title">Loading event…</div>
+</style>    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-bridge.js"></script>
+</head><body><main class="card"><div class="brand"><div class="cross">✝</div>DIVINE MERCY</div><div class="sub">SERVER ATTENDANCE CHECK-IN</div><h1>Attendance Form</h1><div class="event" id="event-title">Loading event…</div>
 <form id="attendance-form"><div class="field"><label for="server-name">Full Name</label><input id="server-name" name="name" required maxlength="100" autocomplete="name" placeholder="Enter your full name"></div><div class="field"><label for="ministry">Ministry</label><select id="ministry" required><option value="">Select your ministry</option><option>Altar Server</option><option>Lector</option><option>Commentator</option><option>Choir</option><option>Extraordinary Minister of Holy Communion</option><option>Usher</option><option>Music Ministry</option><option>Other</option></select></div><div class="field hidden" id="other-wrap"><label for="other-ministry">Specify Ministry</label><input id="other-ministry" maxlength="80"></div><button class="btn" type="submit" id="submit-btn">Submit Attendance</button></form>
 <div id="result" class="result" role="status"></div><p class="note">Your attendance confirmation will appear here. Attendance records and history are not available on this page.</p></main>
 <script>
@@ -18,14 +20,20 @@ function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}c
 function save(s){localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}
 function localDate(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function localTime(){return new Intl.DateTimeFormat('en-PH',{hour:'2-digit',minute:'2-digit',hour12:true}).format(new Date())}
-const state=load();eventData=(state.attendanceEvents||[]).find(e=>e.id===eventId);
+window.dmRefreshData().then(()=>{ const state=load();eventData=(state.attendanceEvents||[]).find(e=>e.id===eventId);
 const eventTitle=document.getElementById('event-title');const form=document.getElementById('attendance-form');const result=document.getElementById('result');
 if(!eventData){eventTitle.textContent='Invalid or unavailable event QR';form.classList.add('hidden');result.textContent='Please scan a valid QR code provided by the parish.';result.classList.add('error');result.style.display='block'}else{eventTitle.textContent=eventData.name+' • '+eventData.date}
 document.getElementById('ministry').addEventListener('change',e=>document.getElementById('other-wrap').classList.toggle('hidden',e.target.value!=='Other'));
-form.addEventListener('submit',e=>{e.preventDefault();if(!eventData)return;const name=document.getElementById('server-name').value.trim();let ministry=document.getElementById('ministry').value;if(ministry==='Other')ministry=document.getElementById('other-ministry').value.trim();if(!name||!ministry)return;
-const s=load();s.attendance=Array.isArray(s.attendance)?s.attendance:[];const day=localDate();const match=s.attendance.find(a=>a.eventId===eventId&&a.date===day&&a.name.toLowerCase()===name.toLowerCase()&&a.ministry.toLowerCase()===ministry.toLowerCase());
-if(!match){s.attendance.push({id:'att_'+Date.now().toString(36),eventId,eventName:eventData.name,name,ministry,date:day,timeIn:localTime(),timeOut:''});save(s);result.className='result';result.innerHTML='<strong>Time In recorded!</strong><br>Thank you for serving. Please scan this event QR again when your service is finished to record Time Out.';}
-else if(!match.timeOut){match.timeOut=localTime();save(s);result.className='result';result.innerHTML='<strong>Time Out recorded!</strong><br>Thank you for your service. Your attendance is complete.';}
-else{result.className='result';result.innerHTML='<strong>Attendance already completed.</strong><br>Your Time In and Time Out have already been recorded.';}
-result.style.display='block';form.classList.add('hidden');});
+form.addEventListener('submit',async e=>{e.preventDefault();if(!eventData)return;const name=document.getElementById('server-name').value.trim();let ministry=document.getElementById('ministry').value;if(ministry==='Other')ministry=document.getElementById('other-ministry').value.trim();if(!name||!ministry)return;
+const button=document.getElementById('submit-btn');button.disabled=true;button.textContent='Recording…';
+try{const resultCode=await window.dmRecordAttendance({eventId,name,ministry,date:localDate(),time:localTime()});
+if(resultCode==='time_in'){result.className='result';result.innerHTML='<strong>Time In recorded!</strong><br>Thank you for serving. Please scan this event QR again when your service is finished to record Time Out.';}
+else if(resultCode==='time_out'){result.className='result';result.innerHTML='<strong>Time Out recorded!</strong><br>Thank you for your service. Your attendance is complete.';}
+else if(resultCode==='already_completed'){result.className='result';result.innerHTML='<strong>Attendance already completed.</strong><br>Your Time In and Time Out have already been recorded.';}
+else if(resultCode==='invalid_event'){throw new Error('This attendance event is no longer active. Please ask the parish administrator.');}
+else{throw new Error('Unable to record attendance. Please check the details and try again.');}
+result.style.display='block';form.classList.add('hidden');
+}catch(error){result.className='result error';result.textContent=error.message||'Attendance could not be recorded. Please try again.';result.style.display='block';button.disabled=false;button.textContent='Submit Attendance';}
+});
+});
 </script></body></html>

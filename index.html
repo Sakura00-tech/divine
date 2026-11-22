@@ -137,21 +137,8 @@ footer{background:var(--navy);color:#fff;text-align:center;padding:30px}
   --shadow:0 10px 30px rgba(185,28,28,.10);
 }
 </style>
-
-    <!-- Supabase JavaScript client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      // Divine Mercy: Supabase connection (frontend-safe publishable key)
-      window.SUPABASE_URL = "https://zkjyukyqwiwbqnvcxijs.supabase.co";
-      window.SUPABASE_PUBLISHABLE_KEY = "sb_publishable_KLWZMYvm-Cs1OZToGL8thA_ai4CLaji";
-
-      // Shared client for this page. Other pages are intentionally unchanged.
-      window.supabaseClient = window.supabase.createClient(
-        window.SUPABASE_URL,
-        window.SUPABASE_PUBLISHABLE_KEY
-      );
-      console.info("Divine Mercy: Supabase client initialized.");
-    </script>
+    <script src="supabase-bridge.js"></script>
 </head>
 
 <body data-page="home">

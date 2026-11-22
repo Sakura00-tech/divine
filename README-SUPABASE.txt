@@ -1,38 +1,59 @@
-DIVINE MERCY — SUPABASE REALTIME SETUP PACKAGE
+DIVINE MERCY — SUPABASE REALTIME BUILD
+======================================
 
-WHAT'S INCLUDED
-- Your original 11 HTML pages, unchanged.
-- supabase-setup.sql: secure database tables, Row Level Security (RLS), and Realtime publication setup.
-- README.txt: setup and safety notes.
+Project URL configured: https://zkjyukyqwiwbqnvcxijs.supabase.co
+The browser bundle uses the supplied Supabase publishable key only.
+NEVER put a service_role or secret key in website files.
 
-IMPORTANT STATUS
-This is a safe database setup package, NOT yet a fully connected real-time website.
-The current HTML pages still use browser localStorage for their application data.
-Running the SQL creates the database foundation but does not automatically switch the pages to Supabase.
-Do not upload this package expecting cross-device sync to work until the front-end integration is completed and tested.
+WHAT IS INCLUDED
+- Original parish website pages
+- supabase-bridge.js shared connection and realtime adapter
+- supabase-setup.sql (base schema reference)
+- supabase-integration-migration.sql (required compatibility migration)
+- This README
 
-SUPABASE PROJECT
-Project URL: https://zkjyukyqwiwbqnvcxijs.supabase.co
-Publishable key: use the publishable key already supplied in your project configuration.
-Never put a service_role or secret key in HTML, JavaScript, or this ZIP.
+IMPORTANT: DATABASE STEP BEFORE DEPLOY
+1. Open Supabase Dashboard > SQL Editor.
+2. Create a NEW query.
+3. Copy the COMPLETE contents of supabase-integration-migration.sql from this ZIP.
+4. Run it once. It is designed to be safe to run again.
+5. Confirm the query reports Success.
+6. Confirm Authentication > Users contains your admin account and public.dm_admins contains that same user's UUID.
+7. In Authentication URL Configuration, set Site URL to your live GitHub Pages URL and add it to Redirect URLs.
+8. Disable public sign-ups if you do not want visitors creating accounts.
 
-SETUP
-1. Open https://supabase.com/dashboard and select project zkjyukyqwiwbqnvcxijs.
-2. Open SQL Editor > New query.
-3. Open supabase-setup.sql from this ZIP, copy all its contents, paste into SQL Editor, and click Run.
-4. In Authentication > Settings, turn OFF public sign-ups. Admin accounts should be created manually by the project owner.
-5. Create your admin user in Authentication > Users.
-6. Copy that user's UUID.
-7. In SQL Editor run this command, replacing the UUID:
-   insert into public.dm_admins (user_id) values ('PASTE-ADMIN-USER-UUID-HERE');
-8. Keep the admin UUID private.
+GITHUB DEPLOY
+1. Keep a backup of the current repository first.
+2. Extract this ZIP on your device.
+3. Upload the extracted FILES (not the ZIP itself) into the repository root, preserving filenames.
+4. Keep supabase-bridge.js beside all HTML files.
+5. Commit the changes and wait for GitHub Pages to publish.
 
-SECURITY NOTES
-- Public visitors can read announcements/schedule/posts.
-- Public visitors can submit a booking or attendance record, but cannot read booking or attendance records.
-- Only user IDs explicitly added to dm_admins can manage content or view/manage booking records.
-- Never use the service_role key in a browser.
-- Review and test policies before collecting real personal information.
+FEATURE / PRIVACY DESIGN
+- Announcements, schedule and posts: public read, authenticated admins write; updates use Supabase Realtime.
+- Bookings: public insert only; only authenticated admins can read/manage.
+- Attendance: public QR form calls a restricted database function for Time In/Time Out; only authenticated admins can read/manage private rows. The function supports scanning from a different phone without public attendance SELECT access.
+- Public QR pages read active event definitions but do not read private attendance rows. A restricted database function handles check-in/out and supports a second scan from a different phone.
+- Admin dashboard requires a current Supabase Auth session AND a matching row in public.dm_admins.
+- Parish sacramental records remain local in this version and are not multi-device synced.
 
-NEXT FRONT-END INTEGRATION
-The current site stores a combined dm_church_data object in localStorage. A proper migration must replace that storage layer with Supabase queries for dm_content, dm_bookings, and dm_attendance, add authenticated admin login, and subscribe to Supabase Realtime changes. The old hard-coded admin/viewer credentials in admin.html/admin-login.html must be removed before deployment.
+VALIDATION PERFORMED ON THIS PACKAGE
+- JavaScript syntax check passed for the shared bridge.
+- Inline JavaScript syntax check passed for all HTML pages.
+- Verified all 11 pages load Supabase JS before the bridge.
+- Verified admin dashboard now checks Supabase admin membership before initialization.
+- Login flow uses Supabase Auth rather than the old demo admin/viewer passwords.
+
+IMPORTANT TEST LIMITATION
+This workspace cannot sign in to your private Supabase project or test GitHub Pages in your browser. Therefore, do not treat the live workflow as confirmed until you complete the checks below.
+
+POST-DEPLOY TESTS
+A. Open admin-login.html and sign in with the Supabase admin email/password.
+B. Confirm admin.html opens; sign out and confirm it returns to login.
+C. Create a TEST announcement, schedule item and post; open public pages in another browser/device and confirm they update.
+D. Submit a TEST booking; confirm it appears in the admin dashboard only.
+E. Create an attendance event in the admin dashboard, open its QR, submit a TEST Time In, then scan again (even from another phone/browser) for Time Out.
+F. Check Supabase Table Editor and browser console for errors.
+G. Delete test entries after successful verification.
+
+If a step fails, keep the previous GitHub deployment available for rollback and share the exact error message (never share passwords or secret keys).

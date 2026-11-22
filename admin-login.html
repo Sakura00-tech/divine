@@ -1707,6 +1707,8 @@ footer{background:#641010 !important;color:#fff !important;}
 .forgot-password-link{display:block;margin-top:14px;text-align:center;color:var(--root-red,#b91c1c);text-decoration:none;font-weight:600;font-size:14px;}
 .forgot-password-link:hover{text-decoration:underline;}
 </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-bridge.js"></script>
 </head>
 
 <body class="login-page">
@@ -1737,9 +1739,9 @@ footer{background:#641010 !important;color:#fff !important;}
                     </label>
 
                     <input
-                        type="text"
+                        type="email"
                         id="username"
-                        placeholder="Enter admin username"
+                        placeholder="Enter admin email"
                         autocomplete="username"
                         required
                     >
@@ -1800,11 +1802,11 @@ footer{background:#641010 !important;color:#fff !important;}
 
 const STORAGE_KEY = "dm_church_data";
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_USERNAME = "";
+const ADMIN_PASSWORD = "";
 
-const VIEWER_USERNAME = "viewer";
-const VIEWER_PASSWORD = "viewer123";
+const VIEWER_USERNAME = "";
+const VIEWER_PASSWORD = "";
 
 const LOGIN_KEY = "dm_admin_logged_in";
 const ROLE_KEY = "dm_admin_role";
@@ -1833,44 +1835,7 @@ function isAdminLoggedIn() {
 }
 
 
-function adminLogin(username, password) {
-
-    if (
-        username === ADMIN_USERNAME &&
-        password === ADMIN_PASSWORD
-    ) {
-
-        sessionStorage.setItem(
-            LOGIN_KEY,
-            "true"
-        );
-        sessionStorage.setItem(
-            ROLE_KEY,
-            "admin"
-        );
-
-        return true;
-    }
-
-    if (
-        username === VIEWER_USERNAME &&
-        password === VIEWER_PASSWORD
-    ) {
-
-        sessionStorage.setItem(
-            LOGIN_KEY,
-            "true"
-        );
-        sessionStorage.setItem(
-            ROLE_KEY,
-            "viewer"
-        );
-
-        return true;
-    }
-
-    return false;
-}
+function adminLogin() { return false; }
 
 
 function adminLogout() {
@@ -2148,50 +2113,23 @@ function initializeLogin() {
     }
 
 
-    form.addEventListener(
-        "submit",
-        (event) => {
-
-            event.preventDefault();
-
-
-            const username =
-                document.getElementById(
-                    "username"
-                ).value.trim();
-
-            const passwordValue =
-                password.value;
-
-
-            const error =
-                document.getElementById(
-                    "login-error"
-                );
-
-
-            if (
-                adminLogin(
-                    username,
-                    passwordValue
-                )
-            ) {
-
-                window.location.href =
-                    "admin.html";
-
-                return;
-            }
-
-
-            error.textContent =
-                "Invalid username or password.";
-
-            error.style.display =
-                "block";
-
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = document.getElementById("username").value.trim();
+        const passwordValue = password.value;
+        const error = document.getElementById("login-error");
+        const submit = form.querySelector('button[type="submit"],input[type="submit"]');
+        if (submit) submit.disabled = true;
+        error.style.display = "none";
+        const result = await window.dmLogin(email, passwordValue);
+        if (submit) submit.disabled = false;
+        if (result.ok) {
+            window.location.href = "admin.html";
+            return;
         }
-    );
+        error.textContent = result.message || "Unable to sign in.";
+        error.style.display = "block";
+    });
 
 }
 
