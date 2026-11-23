@@ -35,20 +35,24 @@ h1{font-size:25px;margin:8px 0;color:#202633}
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-window.dmRefreshData().then(function(){
-(function(){
- const STORAGE_KEY='dm_church_data';
- // This is a public QR display only. Attendance records are never read or displayed here.
- let state={};try{state=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(e){}
- const events=Array.isArray(state.attendanceEvents)?state.attendanceEvents:[];
- const requested=new URLSearchParams(location.search).get('event');
- const shown=requested?events.filter(e=>e.id===requested):events;
+async function renderPublicAttendanceQrs(){
  const root=document.getElementById('qr-list');
- if(!shown.length){root.innerHTML='<p class="muted">No attendance QR codes are available yet. Please ask the parish administrator to create an attendance event.</p>';return;}
- root.innerHTML=shown.map((e,i)=>'<section class="event"><h1></h1><p class="muted"></p><div class="qr" id="qr-'+i+'"></div><p class="muted">Scan using your phone camera</p><a class="btn" target="_blank" rel="noopener" href="attendance.html?event='+encodeURIComponent(e.id)+'">Open Attendance Form</a></section>').join('');
- shown.forEach((e,i)=>{const section=root.children[i];section.querySelector('h1').textContent=e.name;section.querySelector('p').textContent=e.date;const url=new URL('attendance.html?event='+encodeURIComponent(e.id),location.href).href;new QRCode(document.getElementById('qr-'+i),{text:url,width:360,height:360,correctLevel:QRCode.CorrectLevel.H});});
-})();
-});
+ try {
+   // Refresh from Supabase first; only active event definitions are public. Attendance records remain private.
+   await window.dmRefreshData();
+   const state=JSON.parse(localStorage.getItem('dm_church_data')||'{}');
+   const events=Array.isArray(state.attendanceEvents)?state.attendanceEvents:[];
+   const requested=new URLSearchParams(location.search).get('event');
+   const shown=requested?events.filter(e=>String(e.id)===String(requested)):events;
+   if(!shown.length){root.innerHTML='<p class="muted">No active attendance QR code is available. Please ask the parish administrator to publish the event and share its QR link.</p>';return;}
+   root.innerHTML=shown.map((e,i)=>'<section class="event"><h1></h1><p class="muted"></p><div class="qr" id="qr-'+i+'"></div><p class="muted">Scan using your phone camera</p><a class="btn" target="_blank" rel="noopener" href="attendance.html?event='+encodeURIComponent(e.id)+'">Open Attendance Form</a></section>').join('');
+   shown.forEach((e,i)=>{const section=root.children[i];section.querySelector('h1').textContent=e.name;section.querySelector('p').textContent=e.date;const url=new URL('attendance.html?event='+encodeURIComponent(e.id),location.href).href;new QRCode(document.getElementById('qr-'+i),{text:url,width:360,height:360,correctLevel:QRCode.CorrectLevel.H});});
+ } catch(error) {
+   console.error('[Divine Mercy] Public attendance QR load failed:',error);
+   root.innerHTML='<p class="error">Unable to load attendance QR codes. Please refresh the page or contact the parish administrator.</p>';
+ }
+}
+renderPublicAttendanceQrs();
 </script>
 </body>
 </html>

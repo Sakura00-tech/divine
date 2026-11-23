@@ -238,6 +238,28 @@
   window.dmSendPasswordReset = async function (email) {
     return client.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname.replace(/[^/]*$/, 'admin-login.html') });
   };
+  // Persist attendance event definitions immediately so public QR pages on other devices can see them.
+  window.dmSaveAttendanceEvents = async function (events) {
+    if (!(await currentAdmin())) throw new Error('Admin access only.');
+    const list = Array.isArray(events) ? events : [];
+    const { data: existing, error: readError } = await client.from('dm_attendance_events').select('id');
+    if (readError) throw readError;
+    const keep = new Set(list.map(ev => String(ev.id)));
+    for (const row of (existing || [])) {
+      if (!keep.has(String(row.id))) {
+        const { error } = await client.from('dm_attendance_events').delete().eq('id', String(row.id));
+        if (error) throw error;
+      }
+    }
+    for (const ev of list) {
+      const id = String(ev.id || '');
+      if (!id) continue;
+      const { error } = await client.from('dm_attendance_events').upsert({ id, payload: ev, is_active: ev.active !== false });
+      if (error) throw error;
+    }
+    return true;
+  };
+
   window.dmRecordAttendance = async function (record) {
     const { data, error } = await client.rpc('dm_record_attendance', {
       p_event_id: String(record.eventId), p_name: String(record.name),

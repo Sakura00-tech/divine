@@ -2157,6 +2157,8 @@ body.viewer-mode .modal-container {
                 </div>
 
                 <button
+                    onclick="createAnnouncement()" class="primary-button">＋ New Announcement</button>
+                <button
                     id="refresh-announcements"
                     class="secondary-button"
                 >
@@ -2198,6 +2200,8 @@ body.viewer-mode .modal-container {
                 </div>
 
                 <button
+                    onclick="createSchedule()" class="primary-button">＋ Add Schedule</button>
+                <button
                     id="refresh-schedule"
                     class="secondary-button"
                 >
@@ -2238,6 +2242,8 @@ body.viewer-mode .modal-container {
 
                 </div>
 
+                <button
+                    onclick="createPost()" class="primary-button">＋ New Post</button>
                 <button
                     id="refresh-posts"
                     class="secondary-button"
@@ -3458,6 +3464,99 @@ function renderDashboard() {
    ANNOUNCEMENTS
 ===================================================== */
 
+
+/* Admin-only creation for announcements, schedule and posts. */
+function requireContentAdmin() {
+    if (!isAdminUser()) {
+        showToast("Admin access only.");
+        return false;
+    }
+    return true;
+}
+
+function nextContentId(items) {
+    return items.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
+}
+
+function createAnnouncement() {
+    if (!requireContentAdmin()) return;
+    openModal("New Announcement", "Create a parish announcement.", `
+        <div class="form-group"><label>Title</label><input id="new-ann-title" class="form-control"></div>
+        <div class="form-group"><label>Content</label><textarea id="new-ann-content" class="form-control"></textarea></div>
+        <div class="form-group"><label>Priority</label><select id="new-ann-priority" class="form-control">
+            <option value="normal">Normal</option><option value="low">Low</option><option value="high">High</option><option value="urgent">Urgent</option>
+        </select></div>
+        <div class="form-group"><label>Expiration Date (optional)</label><input type="date" id="new-ann-expires" class="form-control"></div>
+    `, () => {
+        const state = getState();
+        const title = document.getElementById("new-ann-title").value.trim();
+        const content = document.getElementById("new-ann-content").value.trim();
+        if (!title || !content) { showToast("Title and content are required."); return false; }
+        state.announcements.unshift({ id: nextContentId(state.announcements), title, content,
+            priority: document.getElementById("new-ann-priority").value,
+            expiresAt: document.getElementById("new-ann-expires").value || null,
+            createdAt: new Date().toISOString() });
+        if (!saveState(state)) { showToast("Could not save. Admin access is required."); return false; }
+        renderAnnouncements(); renderDashboard(); showToast("Announcement created."); return true;
+    });
+}
+
+function createSchedule() {
+    if (!requireContentAdmin()) return;
+    openModal("Add Schedule", "Create a parish schedule entry.", `
+        <div class="form-group"><label>Title</label><input id="new-sch-title" class="form-control"></div>
+        <div class="form-group"><label>Description</label><textarea id="new-sch-description" class="form-control"></textarea></div>
+        <div class="form-group"><label>Event Type</label><select id="new-sch-type" class="form-control">
+            <option value="mass">Mass</option><option value="event" selected>Event</option><option value="special_mass">Special Mass</option><option value="novena">Novena</option><option value="confession">Confession</option><option value="other">Other</option>
+        </select></div>
+        <div class="form-group"><label>Start Date &amp; Time</label><input type="datetime-local" id="new-sch-start" class="form-control"></div>
+        <div class="form-group"><label>End Date &amp; Time</label><input type="datetime-local" id="new-sch-end" class="form-control"></div>
+        <div class="form-group"><label>Location</label><input id="new-sch-location" class="form-control"></div>
+        <div class="form-group"><label>Celebrant</label><input id="new-sch-celebrant" class="form-control"></div>
+    `, () => {
+        const state = getState();
+        const title = document.getElementById("new-sch-title").value.trim();
+        const startDateTime = document.getElementById("new-sch-start").value;
+        if (!title || !startDateTime) { showToast("Title and start date are required."); return false; }
+        state.schedule.push({ id: nextContentId(state.schedule), title,
+            description: document.getElementById("new-sch-description").value.trim(),
+            eventType: document.getElementById("new-sch-type").value, startDateTime,
+            endDateTime: document.getElementById("new-sch-end").value,
+            location: document.getElementById("new-sch-location").value.trim(),
+            celebrant: document.getElementById("new-sch-celebrant").value.trim(),
+            createdAt: new Date().toISOString() });
+        if (!saveState(state)) { showToast("Could not save. Admin access is required."); return false; }
+        renderSchedule(); renderDashboard(); showToast("Schedule entry created."); return true;
+    });
+}
+
+function createPost() {
+    if (!requireContentAdmin()) return;
+    openModal("New Parish Post", "Create a parish social media post.", `
+        <div class="form-group"><label>Post Content</label><textarea id="new-post-content" class="form-control"></textarea></div>
+        <div class="form-group"><label>Status</label><select id="new-post-status" class="form-control">
+            <option value="draft">Draft</option><option value="scheduled">Scheduled</option><option value="published">Published</option>
+        </select></div>
+        <div class="form-group"><label>Platforms</label>
+            <label><input type="checkbox" id="new-platform-facebook"> Facebook</label><br>
+            <label><input type="checkbox" id="new-platform-instagram"> Instagram</label><br>
+            <label><input type="checkbox" id="new-platform-twitter"> Twitter</label>
+        </div>
+        <div class="form-group"><label>Scheduled At (optional)</label><input type="datetime-local" id="new-post-scheduled" class="form-control"></div>
+    `, () => {
+        const state = getState();
+        const content = document.getElementById("new-post-content").value.trim();
+        const platforms = ["facebook", "instagram", "twitter"].filter(p => document.getElementById("new-platform-" + p).checked);
+        if (!content || !platforms.length) { showToast("Post content and at least one platform are required."); return false; }
+        const status = document.getElementById("new-post-status").value;
+        const scheduledAt = document.getElementById("new-post-scheduled").value;
+        state.posts.unshift({ id: nextContentId(state.posts), content, platforms, status, scheduledAt,
+            publishedAt: status === "published" ? new Date().toISOString() : "", createdAt: new Date().toISOString() });
+        if (!saveState(state)) { showToast("Could not save. Admin access is required."); return false; }
+        renderPosts(); renderDashboard(); showToast("Post created."); return true;
+    });
+}
+
 function renderAnnouncements() {
 
     const container =
@@ -3570,6 +3669,8 @@ function renderAnnouncements() {
 ===================================================== */
 
 function editAnnouncement(id) {
+
+    if (!requireContentAdmin()) return;
 
     const state =
         getState();
@@ -3734,6 +3835,8 @@ function editAnnouncement(id) {
 ===================================================== */
 
 function deleteAnnouncement(id) {
+
+    if (!requireContentAdmin()) return;
 
     if (
         !confirm(
@@ -3907,6 +4010,8 @@ function renderSchedule() {
 ===================================================== */
 
 function editSchedule(id) {
+
+    if (!requireContentAdmin()) return;
 
     const state =
         getState();
@@ -4172,6 +4277,8 @@ function scheduleOption(
 
 function deleteSchedule(id) {
 
+    if (!requireContentAdmin()) return;
+
     if (
         !confirm(
             "Are you sure you want to delete this schedule?"
@@ -4345,6 +4452,8 @@ function renderPosts() {
 ===================================================== */
 
 function editPost(id) {
+
+    if (!requireContentAdmin()) return;
 
     const state =
         getState();
@@ -4598,6 +4707,8 @@ function postOption(
 ===================================================== */
 
 function deletePost(id) {
+
+    if (!requireContentAdmin()) return;
 
     if (
         !confirm(
@@ -5547,14 +5658,22 @@ function emptyHTML(
 ===================================================== */
 function attendanceState(){ return getState(); }
 function saveAttendanceState(st){ if(!isAdminUser()) return false; return saveState(st); }
-function createAttendanceEvent(){
+async function createAttendanceEvent(){
   if(!isAdminUser()) return alert('Admin access only.');
   const name=document.getElementById('att-event-name').value.trim();
   const date=document.getElementById('att-event-date').value;
   if(!name||!date) return alert('Enter event name and date.');
   const st=attendanceState(); const id='evt_'+Date.now().toString(36);
   st.attendanceEvents.unshift({id,name,date,createdAt:new Date().toISOString(),active:true});
-  saveAttendanceState(st); document.getElementById('att-event-name').value=''; renderAttendanceEvents();
+  saveAttendanceState(st);
+  try {
+    if (typeof window.dmSaveAttendanceEvents !== 'function') throw new Error('Supabase attendance sync is unavailable. Please reload the page.');
+    await window.dmSaveAttendanceEvents(st.attendanceEvents);
+    document.getElementById('att-event-name').value=''; renderAttendanceEvents();
+  } catch(error) {
+    st.attendanceEvents=st.attendanceEvents.filter(e=>e.id!==id); saveAttendanceState(st); renderAttendanceEvents();
+    alert('The attendance QR could not be published to Supabase: '+(error.message||'Unknown error'));
+  }
 }
 function renderAttendanceSummary(st){
   const events=st.attendanceEvents||[], records=st.attendance||[];
@@ -5569,7 +5688,21 @@ function renderAttendanceEvents(){
   (st.attendanceEvents||[]).forEach(e=>{const q=document.getElementById('qr-'+e.id); if(q&&window.QRCode){q.innerHTML='';new QRCode(q,{text:new URL('attendance.html?event='+encodeURIComponent(e.id),location.href).href,width:112,height:112});}});
   renderAttendanceSummary(st);
 }
-function deleteAttendanceEvent(id){ if(!isAdminUser())return alert('Admin access only.'); if(!confirm('Delete this event and its attendance records?'))return; const st=attendanceState(); st.attendanceEvents=st.attendanceEvents.filter(e=>e.id!==id); st.attendance=st.attendance.filter(a=>a.eventId!==id); saveAttendanceState(st);renderAttendanceEvents();renderAttendanceRecords(); }
+async function deleteAttendanceEvent(id){
+  if(!isAdminUser())return alert('Admin access only.');
+  if(!confirm('Delete this event and its attendance records?'))return;
+  const st=attendanceState(); const previousEvents=[...st.attendanceEvents];
+  st.attendanceEvents=st.attendanceEvents.filter(e=>e.id!==id); st.attendance=st.attendance.filter(a=>a.eventId!==id);
+  saveAttendanceState(st);
+  try {
+    if (typeof window.dmSaveAttendanceEvents !== 'function') throw new Error('Supabase attendance sync is unavailable. Please reload the page.');
+    await window.dmSaveAttendanceEvents(st.attendanceEvents);
+    renderAttendanceEvents();renderAttendanceRecords();
+  } catch(error) {
+    st.attendanceEvents=previousEvents; saveAttendanceState(st); renderAttendanceEvents();
+    alert('The attendance event could not be deleted from Supabase: '+(error.message||'Unknown error'));
+  }
+}
 function renderAttendanceRecords(){
  if(!isAdminUser())return; const body=document.getElementById('att-record-rows');if(!body)return;
  const st=attendanceState(), q=(document.getElementById('att-search')?.value||'').trim().toLowerCase(), d=document.getElementById('att-filter-date')?.value||'';

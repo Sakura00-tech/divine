@@ -121,7 +121,7 @@ radial-gradient(circle at 50% 30%,rgba(220,38,38,.35),transparent 28%),linear-gr
 </head>
 <body data-page="posts">
 <nav id="navbar"><a class="nav-brand" href="index.html"><div class="nav-logo">✝</div><div><div class="nav-title">The National Shrine and Parish</div><div class="nav-subtitle">The Divine Mercy</div></div></a><div class="nav-links" id="nav-links"><a href="index.html">Home</a><a href="announcements.html">Announcements</a><a href="schedule.html">Schedule</a><a class="active" href="posts.html">Posts</a><a href="bookings.html">Bookings</a></div><button id="hamburger" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button></nav>
-<main><header class="page-header"><div class="section-eyebrow">Social Media</div><h1>Parish Posts</h1><p>Manage and schedule social media content</p></header><section class="page-content"><div class="toolbar"><div class="tabs" id="post-tabs"><button class="tab-btn active" data-filter="all" onclick="switchPostTab('all')">All</button><button class="tab-btn" data-filter="published" onclick="switchPostTab('published')">Published</button><button class="tab-btn" data-filter="scheduled" onclick="switchPostTab('scheduled')">Scheduled</button><button class="tab-btn" data-filter="draft" onclick="switchPostTab('draft')">Drafts</button></div></div><div id="posts-list" class="cards-list"></div></section></main><footer><strong>Divine Mercy</strong><br>Jesus, I trust in You.</footer><div id="toast-container"></div><script>
+<main><header class="page-header"><div class="section-eyebrow">Social Media</div><h1>Parish Posts</h1><p>Manage and schedule social media content</p></header><section class="page-content"><div class="toolbar"><div class="tabs" id="post-tabs"><button class="tab-btn" data-filter="published" onclick="switchPostTab('published')">Published</button></div></div><div id="posts-list" class="cards-list"></div></section></main><footer><strong>Divine Mercy</strong><br>Jesus, I trust in You.</footer><div id="toast-container"></div><script>
 const STORAGE_KEY = "dm_church_data";
 let state = { announcements: [], schedule: [], posts: [], bookings: [] };
 let scheduleFilter = "all";
@@ -347,7 +347,7 @@ function switchPostTab(filter) {
 function renderPosts() {
   const list = document.querySelector("#posts-list");
   if (!list) return;
-  const items = state.posts.filter((item) => postFilter === "all" || item.status === postFilter);
+  const items = state.posts.filter((item) => item.status === "published");
   if (!items.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📣</div><h3>No posts found</h3><p>Click “New Post” to create one.</p></div>`;
     return;
