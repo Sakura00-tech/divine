@@ -88,7 +88,7 @@
       // Keep only this browser's local attendance draft/history; private cloud rows are never fetched.
       const { data: events, error: eventError } = await client.from('dm_attendance_events').select('id,payload,is_active').eq('is_active', true);
       if (eventError) throw eventError;
-      state.attendanceEvents = (events || []).map(r => ({ ...(r.payload || {}), id: r.id, active: r.is_active }));
+      state.attendanceEvents = (Array.isArray(events) ? events : []).map(r => ({ ...(r.payload || {}), id: r.id, active: r.is_active }));
     }
     writeLocal(state);
     baseline = structuredClone(state);
